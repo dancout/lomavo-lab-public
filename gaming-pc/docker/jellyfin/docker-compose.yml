@@ -1,0 +1,12 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    # network_mode: host  <-- We removed this line
+    ports:
+      - 8096:8096        # This "bridges" the port to your PC
+    volumes:
+      - D:/Server_Data/Jellyfin_Config:/config
+      - D:/Server_Data/Jellyfin_Cache:/cache
+      - D:/Server_Data/Media:/media
+    restart: 'unless-stopped'

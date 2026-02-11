@@ -1,0 +1,18 @@
+services:
+  glances:
+    image: nicolargo/glances:latest-full
+    container_name: glances
+    restart: unless-stopped
+    pid: host
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /proc:/proc:ro
+    environment:
+      - GLANCES_OPT=-w
+    # Notes:
+    # - Exposes Glances web UI and API on port 61208
+    # - /sys and /proc mounts enable CPU temperature reading on Pi
+    # - API endpoints: /api/4/all, /api/4/sensors, /api/4/network

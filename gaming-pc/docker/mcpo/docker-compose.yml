@@ -1,0 +1,15 @@
+services:
+  mcpo:
+    image: ghcr.io/open-webui/mcpo:latest
+    container_name: mcpo
+    restart: unless-stopped
+    ports:
+      - "8766:8000"
+    volumes:
+      - ./config.json:/app/config.json:ro
+    command: ["--config", "/app/config.json"]
+    # Notes:
+    # - MCPO bridges MCP servers → OpenAPI for Open WebUI tool use
+    # - Uses host.docker.internal to reach MCP servers on same host
+    # - Port 8766 exposed for Open WebUI to connect as tool server
+    # - If MCPO doesn't support HTTP MCP servers, configure Open WebUI directly

@@ -1,0 +1,20 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Notes:
+    # - CPU-only for now. GPU passthrough deferred to Phase 3E
+    #   (requires NVIDIA driver 470+ for WSL2; current GTX 1050Ti driver is ~300s)
+    # - Models stored in named volume (~5GB per 7B Q4 model)
+    # - API at http://<GAMING_PC_IP>:11434
+    # - Pull models after first start:
+    #   docker exec ollama ollama pull qwen2.5:7b-instruct-q4_K_M
+    #   docker exec ollama ollama pull qwen2.5-coder:7b-instruct-q4_K_M
+
+volumes:
+  ollama_data:

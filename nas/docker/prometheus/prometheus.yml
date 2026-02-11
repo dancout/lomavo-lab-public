@@ -1,0 +1,35 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Windows host metrics (CPU, RAM, disk, temps, network)
+  - job_name: "metrics-endpoint"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["<GAMING_PC_IP>:61209"]
+        labels:
+          machine: "gpc"
+
+  # Immich job queue metrics
+  - job_name: "immich-jobs"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["<RPI_IP>:8085"]
+        labels:
+          machine: "rpi"
+          service: "immich"
+
+  # Pi system metrics (CPU, RAM, disk, load, temps) via glances-exporter
+  - job_name: "glances-rpi"
+    static_configs:
+      - targets: ["<RPI_IP>:9101"]
+        labels:
+          machine: "rpi"
+
+  # NAS system metrics (CPU, RAM, disk, load, temps) via glances-exporter
+  - job_name: "glances-nas"
+    static_configs:
+      - targets: ["<NAS_IP>:9101"]
+        labels:
+          machine: "nas"

@@ -1,0 +1,27 @@
+# Local configuration with real IPs/usernames/secrets
+.env.local
+
+# Environment files with sensitive data
+.env
+.env.rpi
+.env.gaming-pc
+.env.nas
+rpi/.env
+gaming-pc/.env
+nas/.env
+# Keep .env.example tracked
+!.env.example
+!rpi/.env.example
+!gaming-pc/.env.example
+!nas/.env.example
+
+# MCP configuration (contains real IPs)
+.mcp.json
+
+# Node.js (MCP servers)
+mcp-servers/node_modules/
+mcp-servers/dist/
+mcp-servers/package-lock.json
+
+# Temporary backup directories (contain sensitive data)
+.backup-originals/

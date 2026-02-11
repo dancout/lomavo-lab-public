@@ -1,0 +1,5 @@
+Whenever making software changes it would be nice to see all the other services this might affect. The goal would be to NOT have it be that you change the expected payload of one API call and accidentally break a bunch of services downstream that now don't follow the expected interface.
+
+It would be nice to have a high level diagram that shows every layer of services and their inputs and outputs and the connections so that you could see how many other aspects of the architecture need to change. Ideally, this could be strongly typed so that there would be linter or compile issues if you changed an interface and something didn't line up, but I know that might not be possible.
+
+Whenever software changes do happen, this file should be referenced for any necessary changes EVERY TIME so that we don't make changes to the code without updating the top level structure file.

@@ -1,0 +1,17 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    restart: always
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Use the 'https' shoutrrr service to make a GET request to the Uptime Kuma URL
+      # NOTE: This expects HTTPS but we don't have that set up yet - see future-plans.md
+      - WATCHTOWER_NOTIFICATION_URL=generic://${RPI_IP}:3001/api/push/${UPTIME_KUMA_PUSH_TOKEN}?status=up&msg=OK&ping=
+      # Optional: Control the detail level of notifications
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=info
+      # Optional: Run interval in seconds (default is 86400s or 24h)
+      - WATCHTOWER_INTERVAL=300
+      - WATCHTOWER_RUN_ONCE=true
+      - DOCKER_API_VERSION=1.44

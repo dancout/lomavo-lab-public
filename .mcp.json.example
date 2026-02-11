@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "homelab": {
+      "type": "url",
+      "url": "http://<GAMING_PC_IP>:8770/mcp"
+    },
+    "monitoring": {
+      "type": "url",
+      "url": "http://<GAMING_PC_IP>:8771/mcp"
+    },
+    "immich": {
+      "type": "url",
+      "url": "http://<GAMING_PC_IP>:8772/mcp"
+    },
+    "dns": {
+      "type": "url",
+      "url": "http://<GAMING_PC_IP>:8773/mcp"
+    },
+    "docker": {
+      "type": "url",
+      "url": "http://<GAMING_PC_IP>:8774/mcp"
+    }
+  }
+}

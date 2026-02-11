@@ -1,0 +1,96 @@
+services:
+  mcp-homelab:
+    build: .
+    container_name: mcp-homelab
+    restart: unless-stopped
+    ports:
+      - "8770:8770"
+    environment:
+      - PORT=8770
+      - REPO_PATH=/repo
+      - TZ=America/Detroit
+    volumes:
+      - "${REPO_PATH}:/repo:ro"
+    command: ["node", "dist/homelab/index.js"]
+    # Notes:
+    # - Read-only access to the repo clone
+    # - Health check: http://<GAMING_PC_IP>:8770/health
+    # - MCP endpoint: http://<GAMING_PC_IP>:8770/mcp
+
+  mcp-monitoring:
+    build: .
+    container_name: mcp-monitoring
+    restart: unless-stopped
+    ports:
+      - "8771:8771"
+    env_file:
+      - .env
+    environment:
+      - PORT=8771
+      - TZ=America/Detroit
+    command: ["node", "dist/monitoring/index.js"]
+    # Notes:
+    # - Connects to Prometheus/Grafana/Loki on NAS via LAN IP
+    # - Machine IPs and service URLs configured in .env file
+    # - Health check: http://<GAMING_PC_IP>:8771/health
+    # - MCP endpoint: http://<GAMING_PC_IP>:8771/mcp
+
+  mcp-immich:
+    build: .
+    container_name: mcp-immich
+    restart: unless-stopped
+    ports:
+      - "8772:8772"
+    env_file:
+      - .env
+    environment:
+      - PORT=8772
+      - TZ=America/Detroit
+    command: ["node", "dist/immich/index.js"]
+    # Notes:
+    # - Connects to Immich API on Gaming PC (host.docker.internal:2283 or LAN IP)
+    # - Requires IMMICH_API_KEY in .env
+    # - Health check: http://<GAMING_PC_IP>:8772/health
+    # - MCP endpoint: http://<GAMING_PC_IP>:8772/mcp
+
+  mcp-dns:
+    build: .
+    container_name: mcp-dns
+    restart: unless-stopped
+    ports:
+      - "8773:8773"
+    env_file:
+      - .env
+    environment:
+      - PORT=8773
+      - TZ=America/Detroit
+    command: ["node", "dist/dns/index.js"]
+    # Notes:
+    # - Connects to Pi-hole v6 API on Pi (primary) and NAS (secondary)
+    # - Requires PIHOLE_PASSWORD in .env
+    # - Health check: http://<GAMING_PC_IP>:8773/health
+    # - MCP endpoint: http://<GAMING_PC_IP>:8773/mcp
+
+  mcp-docker:
+    build: .
+    container_name: mcp-docker
+    restart: unless-stopped
+    ports:
+      - "8774:8774"
+    env_file:
+      - .env
+    environment:
+      - PORT=8774
+      - TZ=America/Detroit
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "${SSH_KEY_DIR}:/ssh:ro"
+    # Copy SSH key with proper permissions (Windows mount gives 0777, SSH requires 0600)
+    command: ["sh", "-c", "cp /ssh/id_ed25519 /tmp/ssh_key && chmod 600 /tmp/ssh_key && SSH_KEY_PATH=/tmp/ssh_key exec node dist/docker/index.js"]
+    # Notes:
+    # - Docker socket mounted for local (Gaming PC) container management
+    # - SSH keys mounted read-only for remote (Pi, NAS) container management
+    # - Key copied to /tmp with correct permissions (Windows mounts as 0777)
+    # - Security: SSH key access is temporary; Phase 3E will create dedicated keys
+    # - Health check: http://<GAMING_PC_IP>:8774/health
+    # - MCP endpoint: http://<GAMING_PC_IP>:8774/mcp

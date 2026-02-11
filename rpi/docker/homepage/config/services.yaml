@@ -1,0 +1,315 @@
+- Gaming PC:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:8096
+        description: Movie Server
+    - Immich:
+        icon: immich.svg
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:2283/
+        description: Photo Library
+        widget:
+          type: immich
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:2283
+          key: {{HOMEPAGE_VAR_IMMICH_API_KEY}}
+          version: 2
+    - Immich Jobs:
+        icon: immich.svg
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:2283/admin/jobs-status
+        description: Processing Queue
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:8085
+          refreshInterval: 5000
+          mappings:
+            - field: active
+              label: Active
+              format: number
+            - field: waiting
+              label: Waiting
+              format: number
+            - field: failed
+              label: Failed
+              format: number
+    - System:
+        icon: mdi-desktop-tower-monitor
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+        description: CPU, RAM, Temperatures
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+          refreshInterval: 5000
+          mappings:
+            - field: cpu.percent
+              label: CPU
+              format: percent
+            - field: memory.percent
+              label: RAM
+              format: percent
+            - field: temperatures.CPU_Package
+              label: CPU
+              format: text
+              suffix: " C"
+            - field: temperatures.GPU_Hot_Spot
+              label: GPU
+              format: text
+              suffix: " C"
+    - Storage:
+        icon: mdi-harddisk
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+        description: Disk Usage
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+          refreshInterval: 10000
+          mappings:
+            - field: disks.C.percent
+              label: C Drive
+              format: percent
+            - field: disks.D.percent
+              label: D Drive
+              format: percent
+    - Network:
+        icon: mdi-ethernet
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+        description: Local / Tailscale Throughput
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+          refreshInterval: 5000
+          mappings:
+            - field: network.Ethernet.bytesRecvPerSec
+              label: Local Down
+              format: bytes
+            - field: network.Ethernet.bytesSentPerSec
+              label: Local Up
+              format: bytes
+            - field: network.Tailscale.bytesRecvPerSec
+              label: TS Down
+              format: bytes
+            - field: network.Tailscale.bytesSentPerSec
+              label: TS Up
+              format: bytes
+    - Containers:
+        icon: mdi-docker
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61208
+        description: Docker Metrics
+        widget:
+          type: glances
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61208
+          version: 4
+          metric: containers
+
+- Raspberry Pi:
+    - Pi-hole:
+        icon: pi-hole.png
+        href: http://{{HOMEPAGE_VAR_RPI_IP}}/admin
+        description: Ad Blocker
+        widget:
+          type: pihole
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}
+          version: 6
+          key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
+    - Vaultwarden:
+        icon: bitwarden.png
+        href: https://{{HOMEPAGE_VAR_RPI_IP}}:8080
+        description: Password Vault
+    - Uptime Kuma:
+        icon: uptime-kuma.png
+        href: http://{{HOMEPAGE_VAR_RPI_IP}}:3001
+        description: Status Monitor
+        widget:
+          type: uptimekuma
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:3001
+          slug: dashboard
+    - System:
+        icon: mdi-raspberry-pi
+        href: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+        description: CPU, RAM, Disk, Temp
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:61208/api/4/all
+          refreshInterval: 5000
+          mappings:
+            - field: cpu.total
+              label: CPU
+              format: percent
+            - field: mem.percent
+              label: RAM
+              format: percent
+            - field: "fs.0.percent"
+              label: Disk
+              format: percent
+            - field: "sensors.0.value"
+              label: Temp
+              format: text
+              suffix: " C"
+    - Network:
+        icon: mdi-ethernet
+        href: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+        description: Throughput
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:61208/api/4/all
+          refreshInterval: 5000
+          mappings:
+            - field: "network.1.bytes_recv_rate_per_sec"
+              label: Download
+              format: bytes
+            - field: "network.1.bytes_sent_rate_per_sec"
+              label: Upload
+              format: bytes
+    - Containers:
+        icon: mdi-docker
+        href: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+        description: Docker Metrics
+        widget:
+          type: glances
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+          version: 4
+          metric: containers
+
+- AI & MCP:
+    - Open WebUI:
+        icon: mdi-robot-outline
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:3080
+        description: Local LLM Chat (Ollama)
+    - Ollama:
+        icon: mdi-brain
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:11434
+        description: Model Serving API
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:11434/api/tags
+          refreshInterval: 30000
+          mappings:
+            - field: models.length
+              label: Models
+              format: number
+    - MCP Servers:
+        icon: mdi-server-network
+        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:8770/health
+        description: 5 MCP Servers (homelab, monitoring, immich, dns, docker)
+    - MCP Activity:
+        icon: mdi-chart-bar
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/f72f1dbc-b35a-410a-8307-b2774d9b2bf2/mcp-tools-overview
+        description: Tool Calls by Server - Last 6h
+        widget:
+          type: iframe
+          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/f72f1dbc-b35a-410a-8307-b2774d9b2bf2/mcp-tools-overview?panelId=5&theme=dark&refresh=30s
+          classes: h-48
+
+- Monitoring:
+    - Grafana:
+        icon: grafana.png
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030
+        description: Dashboards & Alerting
+    - Prometheus:
+        icon: prometheus.png
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:9090
+        description: Metrics Storage
+    - CPU History:
+        icon: mdi-chart-line
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
+        description: All Machines - Last Hour
+        widget:
+          type: iframe
+          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=25&theme=dark&refresh=30s
+          classes: h-48
+    - RAM History:
+        icon: mdi-memory
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
+        description: All Machines - Last Hour
+        widget:
+          type: iframe
+          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=26&theme=dark&refresh=30s
+          classes: h-48
+    - Temp History:
+        icon: mdi-thermometer
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
+        description: CPU & GPU Temps - Last Hour
+        widget:
+          type: iframe
+          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=29&theme=dark&refresh=30s
+          classes: h-48
+
+- QNAP NAS:
+    - Pi-hole (Backup):
+        icon: pi-hole.png
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:8089/admin
+        description: Backup DNS Server
+        widget:
+          type: pihole
+          url: http://{{HOMEPAGE_VAR_NAS_IP}}:8089
+          version: 6
+          key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
+    - System:
+        icon: qnap.png
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:61208
+        description: CPU, RAM, Swap, Temp
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_NAS_IP}}:61208/api/4/all
+          refreshInterval: 5000
+          mappings:
+            - field: cpu.total
+              label: CPU
+              format: percent
+            - field: mem.percent
+              label: RAM
+              format: percent
+            - field: memswap.percent
+              label: Swap
+              format: percent
+            - field: "sensors.0.value"
+              label: Temp
+              format: text
+              suffix: " C"
+    - Storage:
+        icon: mdi-harddisk
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:8080
+        description: DataVol1 (Thick Volume)
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_NAS_IP}}:61208/api/4/fs
+          refreshInterval: 10000
+          mappings:
+            - field: "0.percent"
+              label: Vol Used
+              format: percent
+            - field: "0.used"
+              label: Data
+              format: bytes
+            - field: "0.free"
+              label: Vol Free
+              format: bytes
+    - Network:
+        icon: mdi-ethernet
+        href: http://{{HOMEPAGE_VAR_NAS_IP}}:61208
+        description: Throughput
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_NAS_IP}}:61208/api/4/all
+          refreshInterval: 5000
+          mappings:
+            - field: "network.1.bytes_recv_rate_per_sec"
+              label: Download
+              format: bytes
+            - field: "network.1.bytes_sent_rate_per_sec"
+              label: Upload
+              format: bytes
+
+- Network:
+    - Xfinity Gateway:
+        icon: router.png
+        href: http://{{HOMEPAGE_VAR_ROUTER_IP}}/
+        description: Router Admin
+
+- Cloud Services:
+    - Cloudflare:
+        icon: cloudflare.png
+        href: https://dash.cloudflare.com/
+        description: DNS & CDN
+    - DigitalOcean:
+        icon: si-digitalocean
+        href: https://cloud.digitalocean.com/
+        description: Cloud Infrastructure

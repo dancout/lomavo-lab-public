@@ -1,0 +1,15 @@
+services:
+  keepalived:
+    image: shawly/keepalived:latest
+    container_name: keepalived
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_BROADCAST
+      - NET_RAW
+    environment:
+      - KEEPALIVED_CUSTOM_CONFIG=true
+    volumes:
+      - ./keepalived.conf:/etc/keepalived/keepalived.conf:ro
+      - ./check_pihole.sh:/etc/keepalived/check_pihole.sh:ro

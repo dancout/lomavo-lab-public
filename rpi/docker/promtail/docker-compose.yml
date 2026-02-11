@@ -1,0 +1,14 @@
+services:
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    # Notes:
+    # - Ships Docker container logs to Loki on NAS (<NAS_IP>:3100)
+    # - Docker service discovery auto-detects all containers
+    # - ~30-50MB RAM usage

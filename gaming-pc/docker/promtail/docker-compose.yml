@@ -1,0 +1,15 @@
+services:
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    ports:
+      - "9080:9080"
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/config.yml:ro
+      - //var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    # Notes:
+    # - Ships Docker container logs (Immich, Jellyfin, Glances) to Loki on NAS
+    # - Only ships logs when PC is on (expected)
+    # - Windows Event Viewer logs deferred (requires native Windows install)

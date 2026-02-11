@@ -1,0 +1,13 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      - SIGNUPS_ALLOWED=false
+      - ROCKET_TLS={certs="./ssl/vault.crt",key="./ssl/vault.key"}
+    volumes:
+      - ./vw-data:/data
+      - ./ssl:/ssl
+    ports:
+      - 8080:80

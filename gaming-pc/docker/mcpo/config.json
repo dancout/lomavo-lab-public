@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "homelab": {
+      "url": "http://host.docker.internal:8770/mcp"
+    },
+    "monitoring": {
+      "url": "http://host.docker.internal:8771/mcp"
+    },
+    "immich": {
+      "url": "http://host.docker.internal:8772/mcp"
+    },
+    "dns": {
+      "url": "http://host.docker.internal:8773/mcp"
+    },
+    "docker": {
+      "url": "http://host.docker.internal:8774/mcp"
+    }
+  }
+}

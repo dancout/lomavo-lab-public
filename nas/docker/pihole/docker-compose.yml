@@ -1,0 +1,64 @@
+services:
+  sysctl-init:
+    image: alpine:latest
+    container_name: sysctl-init
+    restart: "no"
+    privileged: true
+    pid: host
+    network_mode: host
+    command: nsenter -t 1 -m -u -i -n sysctl -w net.ipv4.ip_nonlocal_bind=1
+    # Sets ip_nonlocal_bind on the host so Pi-hole can bind to the VIP (<VIP>)
+    # even when Keepalived hasn't assigned it to the interface yet.
+    # Required after every NAS reboot since QNAP has no persistent sysctl config.
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    depends_on:
+      sysctl-init:
+        condition: service_completed_successfully
+    ports:
+      - "<NAS_IP>:53:53/tcp"
+      - "<NAS_IP>:53:53/udp"
+      - "<VIP>:53:53/tcp"
+      - "<VIP>:53:53/udp"
+      - "8089:80/tcp"
+    environment:
+      - TZ=America/Chicago
+      - FTLCONF_dns_upstreams=8.8.8.8;8.8.4.4
+      - FTLCONF_dns_listeningMode=ALL
+      - FTLCONF_webserver_port=80
+      - FTLCONF_webserver_api_password=${PIHOLE_PASSWORD}
+      - FTLCONF_webserver_api_app_sudo=true
+    volumes:
+      - ./etc-pihole:/etc/pihole
+      - ./etc-dnsmasq.d:/etc/dnsmasq.d
+    # Notes:
+    # - Binds DNS (53) to NAS main IP only to avoid conflict with QNAP's
+    #   internal DNS on 127.0.1.1, 10.0.5.1, 10.0.3.1, 10.0.7.1
+    # - Web UI on port 8089 to avoid conflict with QNAP's 8080
+    # - Upstream DNS is Google (not primary Pi-hole) to avoid circular dependency
+    # - listeningMode=ALL needed because Docker bridge makes LAN appear non-local
+    # - Pi-hole v6 uses FTLCONF_ env vars instead of v5's PIHOLE_DNS_ style
+
+  nebula-sync:
+    image: ghcr.io/lovelaze/nebula-sync:latest
+    container_name: nebula-sync
+    restart: unless-stopped
+    depends_on:
+      - pihole
+    environment:
+      - PRIMARY=http://<RPI_IP>|${PIHOLE_PASSWORD}
+      - REPLICAS=http://pihole|${PIHOLE_PASSWORD}
+      - FULL_SYNC=false
+      - RUN_GRAVITY=true
+      - CRON=0 */2 * * *
+      - TZ=America/Chicago
+    # Notes:
+    # - Syncs blocklists/client settings from primary Pi-hole (Pi) to backup (NAS)
+    # - Uses "pihole" hostname (Docker internal DNS) to reach the local Pi-hole
+    # - FULL_SYNC=false because the backup has different network config (upstream DNS,
+    #   listeningMode) set via env vars — those are read-only and cause 400 errors
+    # - RUN_GRAVITY updates blocklists after sync
+    # - Password comes from .env file (not committed to repo)

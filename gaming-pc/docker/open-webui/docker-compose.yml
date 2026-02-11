@@ -1,0 +1,19 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "3080:8080"
+    volumes:
+      - open-webui_data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    # Notes:
+    # - Chat UI for Ollama models, accessible from any LAN device
+    # - Uses host.docker.internal to reach Ollama container on same host
+    # - Persistent data (conversations, settings) in named volume
+    # - Web UI at http://<GAMING_PC_IP>:3080
+
+volumes:
+  open-webui_data:

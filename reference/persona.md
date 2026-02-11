@@ -1,0 +1,6 @@
+- I am a senior software developer who was done both web development (angular, python, node) and mobile (mainly flutter) development over the last 10 years
+- I have dabbled in LLM fine tuning
+- I created my own smart mirror software and hardware integration on my own from scratch (using raspberry pi, flutter web, and flutter android/iOS). I have effectively retired this, though, so simply consider my knowledge and understanding but not the desire to integrate smart mirrors into my future work.
+- I created my own genetically evolving neural network open source package for learning purposes (genetically_evolving_neural_network on pub.dev)
+- I have a preference for strongly typed languages because they are safer and easier to work with, but have also worked with JavaScript and python in the past where necessary
+- I am new to homelabbing but am eager to learn  

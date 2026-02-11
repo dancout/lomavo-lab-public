@@ -1,0 +1,15 @@
+services:
+  glances:
+    image: nicolargo/glances:latest-full
+    container_name: glances
+    restart: unless-stopped
+    pid: host
+    ports:
+      - "61208:61208"
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - GLANCES_OPT=-w
+    # Note: On Windows with Docker Desktop, host monitoring has limitations.
+    # Glances will show container metrics. For full Windows host metrics,
+    # consider Windows-native Glances installation.

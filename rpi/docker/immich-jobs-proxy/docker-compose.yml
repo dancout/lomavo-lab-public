@@ -1,0 +1,10 @@
+services:
+  immich-jobs-proxy:
+    build: .
+    container_name: immich-jobs-proxy
+    restart: unless-stopped
+    ports:
+      - "8085:8080"
+    environment:
+      - IMMICH_URL=${IMMICH_URL}
+      - IMMICH_API_KEY=${IMMICH_JOBS_API_KEY}

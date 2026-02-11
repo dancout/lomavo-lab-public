@@ -1,0 +1,9 @@
+services:
+  glances-exporter:
+    image: glances-exporter-glances-exporter:latest
+    container_name: glances-exporter
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - GLANCES_URL=http://localhost:61208
+      - PORT=9101

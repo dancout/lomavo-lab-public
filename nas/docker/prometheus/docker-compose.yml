@@ -1,0 +1,19 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /share/CACHEDEV1_DATA/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - /share/CACHEDEV1_DATA/docker/prometheus/data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=120d"
+      - "--web.listen-address=:9090"
+    # Notes:
+    # - Host networking so it can reach all LAN targets directly
+    # - Data stored on RAID 5 for durability
+    # - 120-day retention (~1-2GB/month for 4 targets)
+    # - Web UI at http://<NAS_IP>:9090
