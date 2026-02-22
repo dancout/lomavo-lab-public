@@ -43,6 +43,7 @@ This directory contains Architecture Decision Records (ADRs) documenting signifi
 | ADR-035 | Document Search Improvements for LLM Usability | mcp, documents, search, tags, llm | Default source_type to 'document', graceful tag validation, filename in BM25 + results, list_tags tool, LLM-guiding descriptions |
 | ADR-036 | Prometheus Config Variable Substitution | prometheus, secrets, envsubst, deploy | Mac-side envsubst deploy script resolves ${VAR} placeholders in prometheus.yml before SCP to NAS |
 | ADR-037 | Environment Variable Standardization | env, config, standardization, best-practices | Standardize on `.env` (not `.env.local`) as template and local config filename; aligns with industry conventions |
+| ADR-038 | .sync-exclude for Private-Only Content | sync, public-repo, security, private | `.sync-exclude` file filters paths from public sync; private content stays version-controlled but never copied to lomavo-lab-public |
 
 ## Format
 

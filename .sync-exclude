@@ -1,0 +1,10 @@
+# Patterns to exclude from public repo sync (one per line).
+# These files remain git-tracked in the private repo but are
+# filtered out by sync-to-public.sh before copying.
+#
+# Uses grep -F (fixed string) prefix matching against file paths.
+# A trailing slash means "everything under this directory".
+
+# Hardened container experiment — contains security architecture,
+# network details, and deployment strategies
+reference/sandbox/

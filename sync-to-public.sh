@@ -3,6 +3,7 @@ set -euo pipefail
 
 # Sync git-tracked files from private lomavo-lab to public lomavo-lab-public.
 # Only copies files that git tracks (automatically excludes .env, .mcp.json, etc.)
+# Filters out paths listed in .sync-exclude (private-only content).
 # Validates no sensitive values leak, commits in public repo, but does NOT push.
 
 PRIVATE_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -30,6 +31,34 @@ trap 'rm -f "$TRACKED_FILES"' EXIT
 
 cd "$PRIVATE_DIR"
 git ls-files > "$TRACKED_FILES"
+
+# Filter out private-only paths from .sync-exclude
+SYNC_EXCLUDE="$PRIVATE_DIR/.sync-exclude"
+if [[ -f "$SYNC_EXCLUDE" ]]; then
+    FILTERED=$(mktemp)
+    # Build grep pattern from non-comment, non-empty lines
+    EXCLUDE_PATTERNS=$(grep -v '^\s*#' "$SYNC_EXCLUDE" | grep -v '^\s*$' || true)
+    if [[ -n "$EXCLUDE_PATTERNS" ]]; then
+        # Filter out any tracked file whose path starts with an excluded prefix
+        while IFS= read -r file; do
+            excluded=false
+            while IFS= read -r pattern; do
+                if [[ "$file" == ${pattern}* ]]; then
+                    excluded=true
+                    break
+                fi
+            done <<< "$EXCLUDE_PATTERNS"
+            $excluded || echo "$file"
+        done < "$TRACKED_FILES" > "$FILTERED"
+        EXCLUDED_COUNT=$(( $(wc -l < "$TRACKED_FILES") - $(wc -l < "$FILTERED") ))
+        mv "$FILTERED" "$TRACKED_FILES"
+        if [[ $EXCLUDED_COUNT -gt 0 ]]; then
+            echo "    Excluded $EXCLUDED_COUNT file(s) via .sync-exclude"
+        fi
+    else
+        rm -f "$FILTERED"
+    fi
+fi
 
 rsync -a --files-from="$TRACKED_FILES" "$PRIVATE_DIR/" "$PUBLIC_DIR/"
 

@@ -20,6 +20,8 @@ Repository structure for the lomavo homelab documentation.
 ├── GETTING_STARTED.md     # Onboarding guide for new users / forkers
 ├── HOMELAB_PROFILE.md.example  # Template for hardware/experience/goals
 ├── .env.example           # Template for local IPs/usernames (copy to .env)
+├── .sync-exclude          # Paths excluded from public repo sync (ADR-038)
+├── sync-to-public.sh      # Syncs git-tracked files to lomavo-lab-public
 ├── next-steps.md          # Current sprint / active tasks
 ├── completed.md           # Archive of completed work
 │
@@ -78,6 +80,7 @@ Repository structure for the lomavo homelab documentation.
     ├── file-organization.md     # This file
     ├── credentials.md           # Where to find credentials
     ├── operational-knowledge/   # Version-controlled operational gotchas
+    ├── sandbox/                 # Closed-box experiment planning (PRIVATE — excluded from public sync)
     ├── adr_appendix.md          # Extended ADR format guide
     ├── persona.md               # User background/preferences
     └── *.md                     # Historical research notes

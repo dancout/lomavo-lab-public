@@ -10,6 +10,7 @@ _Pick a task from below and move it here with `/next-task`._
 
 ~1 session each, no blockers.
 
+- [ ] Create lightweight skill that calls sync-to-publish.sh. Should ensure that "/security-review", "/doc-update", and "/secrets-check" are all run successfully first.
 - [ ] Set up SSH aliases for quick machine access from MacBook
 - [ ] Add Uptime Kuma entries for MCP servers
 - [ ] Audit Xfinity router open ports (check if still needed, close if not)

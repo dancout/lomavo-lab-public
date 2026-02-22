@@ -9,7 +9,7 @@
 
 The repo version used `<PLACEHOLDER>` format while the deployed NAS config had real values hardcoded. This created a risk: if someone deployed the repo template directly via SCP, all scrape targets would break and the Qdrant Bearer token would be lost.
 
-**Deployment model:** Variable substitution happens on a **deployment node** (currently MacBook, portable to Linux/WSL or future orchestration systems like Open Claw container). The node must have network access to NAS and `envsubst` available. The resolved config is then deployed to NAS.
+**Deployment model:** Variable substitution happens on a **deployment node** (currently MacBook, portable to Linux/WSL or future orchestration systems). The node must have network access to NAS and `envsubst` available. The resolved config is then deployed to NAS.
 
 This is consistent with ADR-002 (environment variables for secrets) and ADR-004 (version-controlled deploy workflow).
 
