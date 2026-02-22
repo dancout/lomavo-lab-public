@@ -8,3 +8,6 @@
 # Hardened container experiment — contains security architecture,
 # network details, and deployment strategies
 reference/sandbox/
+
+# Sandbox skill — references private project details
+.claude/skills/sandbox/
