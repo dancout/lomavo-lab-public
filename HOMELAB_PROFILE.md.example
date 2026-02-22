@@ -1,38 +1,76 @@
 # My Homelab Profile
 
-Quick reference for me and my AI agent. Update as hardware changes.
+Quick reference for your hardware inventory, experience level, and setup. Share this with your AI agent to help it understand your constraints and resources.
 
-## Hardware Inventory
+## User Profile
 
-| Machine | Hostname | Role | Key Specs |
-|---------|----------|------|-----------|
-| [e.g. Raspberry Pi 4 8GB] | rpi | DNS, proxy, core services | ARM64, 8GB RAM |
-| [e.g. Gaming PC, Windows 11] | gaming-pc | Media server, AI inference | RTX 3080, 32GB RAM |
-| [e.g. QNAP NAS TS-433] | nas | Storage, monitoring stack | 4x4TB RAID 5 |
+- **Experience**: [e.g. Senior developer (10 years: Angular, Python, Node), new to homelabbing]
+- **Specializations**: [e.g. Web development, mobile development]
+- **Language Preferences**: [e.g. Prefer strongly typed languages; pragmatic about JavaScript where necessary]
+- **Goals**: [What you want to run: DNS, storage, media server, monitoring, etc.]
 
-## Network
+## Active Homelab Hardware
 
-- LAN subnet: `10.0.0.0/24`
-- Router IP: `10.0.0.1`
-- Pi-hole VIP (if using HA DNS): `10.0.0.X`
+### Primary Machines
 
-## Experience Level
+| Machine | Role | Key Specs |
+|---------|------|-----------|
+| [e.g. Raspberry Pi 4 8GB] | DNS, core services, monitoring | ARM64, 8GB RAM, Ethernet |
+| [e.g. Gaming PC Windows 11] | Docker, media, compute | [CPU model], [GPU], [RAM], [storage] |
+| [e.g. QNAP TS-433] | Storage, HA failover, NAS services | [CPU], [RAM], [RAID config], [2.5GbE] |
 
-[e.g. Senior developer (10 years: Angular, Python, Node). New to infrastructure and homelabbing.]
+### Network Infrastructure
 
-## Goals
+- **Router**: [e.g. Xfinity gateway at 10.0.0.1]
+- **Switch**: [e.g. TrendNet 2.5G connecting all machines]
+- **DNS HA**: [e.g. Pi-hole primary on Pi, backup on NAS, virtual IP for failover]
+- **Network Diagram**:
+  ```
+  [Router] → [Switch] → [Pi, Gaming PC, NAS]
+  ```
 
-What I want to run:
-- [ ] Ad-blocking DNS (Pi-hole)
-- [ ] Photo library (Immich)
-- [ ] Password manager (Vaultwarden)
-- [ ] Media server (Jellyfin)
-- [Add your own goals here]
+## Available Storage (Not Currently Integrated)
+
+### External Drives
+
+- [e.g. 1TB WD Blue SATA with USB adapter — for bulk backup/staging]
+- [e.g. 500GB portable drive — for off-site backup]
+- [e.g. USB thumb drives (8GB typical) — for boot media, tools]
+
+### Potential Uses
+
+[List ideas: incremental backup staging, disaster recovery, data transfers, etc.]
+
+## Available Hardware (Not Currently Deployed)
+
+### Undeployed Equipment
+
+- [e.g. Extra Raspberry Pi 4 or Libre Computer — could become DNS failover, monitoring node, or edge compute]
+- [e.g. WiFi USB dongle]
+- [e.g. Bluetooth USB dongle]
+
+### Deployment Ideas
+
+[What could you do with this hardware?]
+
+## Legacy Hardware (Not In Service)
+
+### Old Machines
+
+[e.g. 2011 MacBook Pro with ~400GB encrypted data + free space — potential recovery or lightweight client project]
+
+## Hardware Constraints & Considerations
+
+[Document any limitations: RAM, compute, storage capacity, network bottlenecks, SSH quirks, platform-specific issues, etc.]
+
+## Future Expansion Possibilities
+
+[What could grow your setup: additional nodes, storage consolidation, new services, hardware upgrades, etc.]
 
 ## Current Phase
 
-[e.g. Phase 1 in progress: basic network setup, SSH, first services.]
+[e.g. Phase 1 in progress: basic network setup, SSH, first services]
 
 ## Deviations from Reference Architecture
 
-[Note where your setup differs from the original owner's, e.g. "No QNAP NAS — using Synology DS923+"]
+[Note where your setup differs from the original owner's, e.g. "No QNAP NAS — using Synology DS923+" or "Using Unraid instead of Docker Compose"]

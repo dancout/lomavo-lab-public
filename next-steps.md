@@ -10,7 +10,6 @@ _Pick a task from below and move it here with `/next-task`._
 
 ~1 session each, no blockers.
 
-- [ ] Configure Wake-on-LAN for Gaming PC
 - [ ] Set up SSH aliases for quick machine access from MacBook
 - [ ] Add Uptime Kuma entries for MCP servers
 - [ ] Audit Xfinity router open ports (check if still needed, close if not)
@@ -22,6 +21,7 @@ _Pick a task from below and move it here with `/next-task`._
 
 ~1–3 sessions each.
 
+- [ ] **Gaming PC auto-wake + auto-sleep** — Pi reverse proxy wakes PC on demand (Immich/Jellyfin access), PC enters S3 sleep when idle. Saves ~80% electricity, may require moving always-on services. See `plans/infrastructure.md`.
 - [ ] Align Uptime Kuma monitors with Grafana alerts (single source of truth for service health)
 - [ ] Watchtower update notifications (Discord alert when container images auto-update)
 - [ ] NAS snapshot pool metrics on Homepage (requires SSH/SNMP — ADR-014)

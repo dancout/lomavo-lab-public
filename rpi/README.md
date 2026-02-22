@@ -71,10 +71,12 @@ Host: `<RPI_USER>@<RPI_IP>` (see `.env` for actual values)
 ├── promtail/
 │   ├── docker-compose.yml
 │   └── promtail-config.yml
-└── caddy/
-    ├── docker-compose.yml
-    ├── Caddyfile
-    └── .env
+├── caddy/
+│   ├── docker-compose.yml
+│   ├── Caddyfile
+│   └── .env
+├── scripts/
+│   └── wake-gaming-pc.sh         # Wake Gaming PC via magic packet (requires wakeonlan tool)
 ```
 
 ## Environment Variables

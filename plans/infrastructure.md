@@ -8,8 +8,14 @@ Network, power management, and security improvements.
 
 ## Power Management
 
-- [ ] Configure Wake-on-LAN for Gaming PC
-- [ ] Create scripts on Pi to wake PC on demand
+- [x] Configure Wake-on-LAN for Gaming PC — WoL enabled (was default), Fast Startup disabled, MAC in `.env`
+- [x] Create scripts on Pi to wake PC on demand — `rpi/scripts/wake-gaming-pc.sh` deployed to `~/scripts/` on Pi, tested
+  - **Remaining:** BIOS setting for WoL from full shutdown (manual — requires reboot into UEFI)
+- [ ] **Auto-wake + auto-sleep for Gaming PC** (future task)
+  - Goal: PC enters S3 sleep when idle, auto-wakes when Immich/Jellyfin/other services accessed
+  - Approach: Reverse proxy on Pi (or NAS) that checks if Gaming PC is up; if not, trigger wake-gaming-pc.sh and wait for boot, then forward request
+  - May require moving some always-on services (Homepage, Uptime Kuma status) off Gaming PC or adding fallback endpoints
+  - See plans/power-management.md (when created) for detailed design
 - [ ] Consider: PC auto-wake for scheduled tasks, auto-sleep when idle
 - [ ] **Power consumption tracking** — requires smart plug hardware (e.g., 3x TP-Link Kasa KP115 ~$15-20 each). Without smart plugs, true per-machine wattage cannot be measured: the Pi has no power sensors, the QNAP NAS (ARM TS-433) doesn't expose power metrics, and the Gaming PC's Intel RAPL only reports CPU package power (not total system). When ready, create a `power-exporter` proxy using `python-kasa` local API, following the existing proxy pattern.
 

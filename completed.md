@@ -4,6 +4,27 @@ Archive of completed milestones. See `plans/README.md` for future roadmap, git l
 
 ## February 2026
 
+**Hardware Inventory Documentation (Feb 22)**
+- Created `HOMELAB_PROFILE.md` — comprehensive hardware inventory and user profile for current owner
+- Documented active hardware: Raspberry Pi 4, Gaming PC (MSI MPG Z390 motherboard in NZXT S340 tower), QNAP NAS, TrendNet 2.5G switch
+- Documented available but undeployed resources: 1TB WD Blue SATA HDD, 500GB WD My Passport, USB thumb drives, extra Pi4/Libre Computer, WiFi/Bluetooth dongles
+- Documented legacy hardware: 2011 MacBook Pro with ~400GB total (encrypted data + recovery space)
+- Included hardware constraints and future expansion possibilities
+- File serves as reference for planning infrastructure work and understanding resource availability
+- Completes hardware profile setup started in Feb 22 "New User Onboarding" work (which created template)
+
+**Wake-on-LAN for Gaming PC (Feb 22)**
+- Configured Wake on Magic Packet in Windows NIC settings (was already enabled by default)
+- Disabled Fast Startup via `powercfg /h off` — required for WoL from full shutdown
+- Documented `GAMING_PC_MAC` in `.env` and `.env.example` (MAC: `00:D8:61:9D:50:7B`)
+- Created `rpi/scripts/wake-gaming-pc.sh` — sends magic packet and waits for PC to respond via ping (90s timeout)
+- Installed `wakeonlan` tool on Pi and deployed script to `~/scripts/`, verified working
+- Updated `gaming-pc/README.md` with WoL setup section (includes BIOS step for full shutdown, Windows commands, re-enable instructions)
+- Updated `infrastructure/network.md` to include `GAMING_PC_MAC` in device table
+- Updated `rpi/README.md` to document scripts directory
+- Added future task to `next-steps.md` Priority 2: Gaming PC auto-wake + auto-sleep (with reverse proxy on Pi to trigger on demand)
+- **Remaining:** Manual BIOS setting (Wake on LAN enable, ERPReady disable) for WoL from full shutdown — user has completed this step
+
 **New User Onboarding, Homelab Profile Setup, & .env Standardization (Feb 22)**
 - Created `GETTING_STARTED.md` — positions repo as both deployed reference and reusable framework, with Quick Start, SSH prerequisites, key files reading order
 - Created `HOMELAB_PROFILE.md.example` — structured template for hardware inventory, experience level, goals, deviations from reference architecture

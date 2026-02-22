@@ -230,6 +230,55 @@ The metrics endpoint (`metrics-endpoint.ps1`) provides Windows host CPU/RAM/disk
 - Network stats use .NET NetworkInterface API to include Tailscale (see ADR-019)
 - First request after service restart shows 0 bytes/sec (no previous data for rate calculation)
 
+## Wake-on-LAN (WoL)
+
+The Gaming PC can be woken remotely via magic packet from the Raspberry Pi. All services start automatically on boot (Docker via auto-login, ADR-015).
+
+### Current State
+
+- **NIC:** Intel Ethernet Connection (7) I219-V (`Ethernet 2`)
+- **MAC:** `00:D8:61:9D:50:7B` (also in `.env` as `GAMING_PC_MAC`)
+- **Wake on Magic Packet:** Enabled (was already default)
+- **Fast Startup:** Disabled (`powercfg /h off`) — required for WoL from full shutdown
+- **BIOS:** Must be enabled manually for WoL from full shutdown (see below)
+
+### Wake the PC from Pi
+
+```bash
+# On the Pi — env vars can be inline or sourced from ~/.env
+GAMING_PC_MAC=00:D8:61:9D:50:7B GAMING_PC_IP=10.0.0.32 ~/scripts/wake-gaming-pc.sh
+
+# Or from this repo's .env on the Pi:
+set -a && source ~/.env && set +a && ~/scripts/wake-gaming-pc.sh
+```
+
+The script sends a magic packet to the broadcast address (`10.0.0.255:9`) and polls until the PC responds to ping (max 90s, configurable).
+
+### WoL from Sleep vs Full Shutdown
+
+| State | Requires BIOS setting? | Works now? |
+|-------|----------------------|------------|
+| Sleep (S3) | No | Yes |
+| Full shutdown | Yes | Only after BIOS step below |
+
+### BIOS Setup (one-time, manual)
+
+Required for WoL to work from a full shutdown (not just sleep):
+
+1. Reboot → enter BIOS/UEFI (Del or F2 at POST)
+2. Find **"Wake on LAN"** / **"Power On By PCI-E LAN"** / **"ErP Ready"** → set to **Enabled** / **Disabled** (ErP must be *disabled* to allow WoL)
+3. Save and boot
+
+### Re-enabling Fast Startup (if needed)
+
+Fast Startup is disabled to allow WoL from shutdown. If you need to re-enable it:
+
+```powershell
+powercfg /h on
+```
+
+Note: re-enabling will break WoL from full shutdown.
+
 ## Auto-Login Configuration (ADR-015)
 
 Docker Desktop requires a user login to start. To ensure Docker services start automatically after reboot:

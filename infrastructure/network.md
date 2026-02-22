@@ -4,17 +4,17 @@ Read this file when doing network-related tasks (IP changes, SSH access, mounts,
 
 **Note:** All IPs and usernames below use placeholders. See `.env` for actual values.
 
-## Device IPs
+## Device IPs and MACs
 
-| Device | IP Variable | Access |
-|--------|-------------|--------|
-| Router/Gateway | `<ROUTER_IP>` | Web UI |
-| Raspberry Pi | `<RPI_IP>` | SSH |
-| Gaming PC | `<GAMING_PC_IP>` | SSH |
-| QNAP NAS | `<NAS_IP>` | SSH, Web UI, SMB |
-| Pi-hole DNS | `<RPI_IP>` | Web UI :80/admin |
-| Pi-hole DNS (backup) | `<NAS_IP>` | Web UI :8089/admin |
-| Pi-hole VIP | `<VIP>` | Virtual IP (Keepalived HA) |
+| Device | IP Variable | MAC Variable | Access |
+|--------|-------------|------|--------|
+| Router/Gateway | `<ROUTER_IP>` | — | Web UI |
+| Raspberry Pi | `<RPI_IP>` | — | SSH |
+| Gaming PC | `<GAMING_PC_IP>` | `<GAMING_PC_MAC>` | SSH, Wake-on-LAN |
+| QNAP NAS | `<NAS_IP>` | — | SSH, Web UI, SMB |
+| Pi-hole DNS | `<RPI_IP>` | — | Web UI :80/admin |
+| Pi-hole DNS (backup) | `<NAS_IP>` | — | Web UI :8089/admin |
+| Pi-hole VIP | `<VIP>` | — | Virtual IP (Keepalived HA) |
 
 ## SSH Commands
 
