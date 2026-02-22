@@ -88,6 +88,6 @@ memory), which provides dramatically faster inference via the Neural Engine.
 
 ## References
 
-- Phase 3 plan in `future-plans.md`
+- Phase 3 plan in `plans/ai-and-apps.md`
 - ADR-027: MCP Server Architecture (LLM ↔ homelab integration)
 - Ollama documentation: https://ollama.com

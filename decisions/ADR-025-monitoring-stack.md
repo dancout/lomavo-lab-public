@@ -65,6 +65,17 @@ Prometheus scrapes four custom endpoints that serve Prometheus text format:
 | Disk Almost Full (Pi/NAS) | Pi + NAS | Disk > 85% for >5 min | Warning |
 | High Temperature (Pi/NAS) | Pi + NAS | Temp > 80°C for >2 min | Critical |
 | Immich Failed Jobs | Pi | Failed jobs > 0 for >5 min | Warning |
+| Nest Metrics Missing | Pi | `absent(nest_ambient_temperature_fahrenheit)` for >5 min | Warning |
+| Glances Metrics Missing (Pi) | Pi | `absent(glances_cpu_percent{job="glances-rpi"})` for >5 min | Warning |
+| Glances Metrics Missing (NAS) | NAS | `absent(glances_cpu_percent{job="glances-nas"})` for >5 min | Warning |
+| Windows Metrics Missing | Gaming PC | `absent(windows_cpu_usage_percent)` for >5 min | Warning |
+| Immich Jobs Metrics Missing | Pi | `absent(immich_jobs_active_total)` for >5 min | Warning |
+
+**Two-layer alerting for scrape targets:**
+1. **"Scrape Target Down"** — fires when the exporter is unreachable (Prometheus `up == 0`)
+2. **"Metrics Missing"** — fires when the exporter responds but its core metric is absent (`absent()`) — catches API auth expiration, upstream schema changes, or empty responses
+
+Alerts are file-provisioned via `nas/docker/grafana/provisioning/alerting/alerts.yml` — rules appear as read-only in the Grafana UI and survive database rebuilds. Changes go through version control: edit the YAML, SCP to NAS, restart Grafana.
 
 Alerts route to Discord via webhook.
 
@@ -92,6 +103,7 @@ Promtail on each machine ships Docker container logs to Loki on the NAS via Dock
 
 ### Trade-offs
 - Used Grafana built-in alerting instead of separate Alertmanager (simpler for homelab scale)
+- Alert rules are file-provisioned (not API-managed) — ensures they survive database rebuilds and are version-controlled
 - Gaming PC Promtail deployed from console (Docker credential helper blocks remote `docker pull` over SSH — file transfer via SCP works fine)
 
 ## Related

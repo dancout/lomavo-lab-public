@@ -9,7 +9,8 @@
     "start:monitoring": "node dist/monitoring/index.js",
     "start:immich": "node dist/immich/index.js",
     "start:dns": "node dist/dns/index.js",
-    "start:docker": "node dist/docker/index.js"
+    "start:docker": "node dist/docker/index.js",
+    "start:documents": "node dist/documents/index.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

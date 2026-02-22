@@ -1,0 +1,270 @@
+{
+  "panels": [
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (tool) (count_over_time({container=~\"$server\"} | json | event=\"tool_call\" | method=\"tools/call\" | tool!=\"\" [$__range]))",
+          "legendFormat": "{{tool}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Calls by Tool",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "avg_over_time({container=~\"$server\"} | json | event=\"tool_call\" | method=\"tools/call\" | tool!=\"\" | unwrap duration_ms [$__range]) by (tool)",
+          "legendFormat": "{{tool}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg Response Time by Tool",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 30,
+            "stacking": {
+              "mode": "normal"
+            }
+          }
+        }
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (tool) (count_over_time({container=~\"$server\"} | json | event=\"tool_call\" | method=\"tools/call\" | tool!=\"\" [$__interval]))",
+          "legendFormat": "{{tool}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool Calls Over Time (by Tool)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 10
+          },
+          "unit": "ms"
+        }
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 4,
+      "options": {
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "targets": [
+        {
+          "expr": "quantile_over_time(0.50, {container=~\"$server\"} | json | event=\"tool_call\" | method=\"tools/call\" | unwrap duration_ms [$__interval]) by (container)",
+          "legendFormat": "p50 {{container}}",
+          "refId": "A"
+        },
+        {
+          "expr": "quantile_over_time(0.95, {container=~\"$server\"} | json | event=\"tool_call\" | method=\"tools/call\" | unwrap duration_ms [$__interval]) by (container)",
+          "legendFormat": "p95 {{container}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Response Time by Tool",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 5,
+      "options": {
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": false,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "expr": "{container=~\"$server\"} | json | event=\"tool_call\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool Call Log",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 6,
+      "options": {
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": false,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "expr": "{container=~\"$server\"} | json | event=\"error\"",
+          "refId": "A"
+        }
+      ],
+      "title": "Error Log",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [
+    "homelab",
+    "mcp",
+    "detail"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": "/mcp-.*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "includeAll": true,
+        "multi": true,
+        "name": "server",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "homelab",
+            "value": "/mcp-homelab"
+          },
+          {
+            "selected": false,
+            "text": "monitoring",
+            "value": "/mcp-monitoring"
+          },
+          {
+            "selected": false,
+            "text": "immich",
+            "value": "/mcp-immich"
+          },
+          {
+            "selected": false,
+            "text": "dns",
+            "value": "/mcp-dns"
+          },
+          {
+            "selected": false,
+            "text": "docker",
+            "value": "/mcp-docker"
+          }
+        ],
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "MCP Tools - Detail",
+  "uid": "acbabb49-a368-4448-83c8-9d1675206441"
+}

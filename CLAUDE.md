@@ -21,8 +21,8 @@ You have SSH access to all machines. Use it proactively.
 | NAS | `ssh <NAS_USER>@<NAS_IP>` | Check storage, manage Glances container |
 
 **Do these without asking:**
-- Retrieve credentials from machines (see Finding Credentials below)
-- Deploy updated configs via SCP/SSH
+- Retrieve credentials from machines (see `reference/credentials.md`)
+- Deploy updated configs via SCP/SSH (see `reference/deploy-commands.md`)
 - Restart services after config changes
 - Check service status and logs
 - Run diagnostic commands
@@ -35,51 +35,30 @@ You have SSH access to all machines. Use it proactively.
 
 ## Design Principles
 
-**Modularity**: Design with abstraction layers so services can be swapped without major rewrites (ADR-005).
+See `reference/design-principles.md` for homelab pillars and technical principles.
 
-**MCP-Readiness**: Structure services to be actionable via MCP servers in the future. Prefer HTTP APIs with JSON responses over shell scripts or proprietary protocols.
+## Research Guidelines
 
-**Self-Healing**: Services should auto-recover from crashes (Docker restart policies, script restart loops).
-
-**Observability**: Every service should be monitorable (Homepage widget + Uptime Kuma).
-
-For detailed guidance, see `reference/design-principles.md`.
+- **Self-hosted docs first** — when investigating service features, check self-hosted/open-source documentation, not cloud/SaaS docs. Previous Qdrant research conflated cloud and self-hosted capabilities.
+- **Check deployed versions** — don't assume latest. Check the machine README or `docker inspect` for the actual running version before recommending features.
 
 ## What to Read When
 
 | Task | Read First | Why |
 |------|-----------|-----|
 | Starting a session | `next-steps.md` | Current priorities |
+| Planning future work | `plans/README.md` | Phased roadmap index with topic files |
 | Adding/modifying a service | `infrastructure/services.md` | What runs where |
-| Deploying to a machine | `rpi/README.md`, `gaming-pc/README.md`, or `nas/README.md` | Deploy commands, directory mappings |
+| **Implementing a plan / adding a service** | **`CONTRIBUTING.md` → New Service Deployment Checklist** | **Don't miss prerequisites, Homepage, Uptime Kuma, alerting** |
+| Deploying to a machine | Machine README + `reference/deploy-commands.md` | Deploy commands, directory mappings |
 | Network/SSH/mounts | `infrastructure/network.md` | IPs, SSH commands, mount paths |
 | Understanding past decisions | `decisions/README.md` | ADR index with summaries |
 | Diagnosing an outage/issue | `runbooks/README.md` | Past incidents with diagnosis steps and fixes |
+| Looking for a file | `reference/file-organization.md` | Repo structure |
+| Finding a credential | `reference/credentials.md` | Where secrets live |
+| Checking service ports | `infrastructure/services.md` | Full port inventory |
+| Updating instructions/memory | `reference/writing-instructions.md` | Rules for maintaining docs |
 | **Before merging** | **`CONTRIBUTING.md`** | **MANDATORY checklist** |
-
-## Quick Deploy Commands
-
-**Note:** Replace `<RPI_USER>`, `<RPI_IP>`, etc. with values from `.env.local`.
-
-**Raspberry Pi:**
-```bash
-# Deploy a service config
-scp rpi/docker/SERVICE/docker-compose.yml <RPI_USER>@<RPI_IP>:~/SERVICE/
-ssh <RPI_USER>@<RPI_IP> "cd ~/SERVICE && docker compose down && docker compose up -d"
-
-# Deploy Homepage (special - needs sudo for config)
-scp rpi/docker/homepage/config/services.yaml <RPI_USER>@<RPI_IP>:/tmp/
-ssh <RPI_USER>@<RPI_IP> "sudo cp /tmp/services.yaml ~/homepage/config/ && cd ~/homepage && docker compose restart"
-```
-
-**Gaming PC:**
-```bash
-# Run PowerShell command (quotes around username if it has spaces)
-ssh "<GAMING_PC_USER>"@<GAMING_PC_IP> "powershell -Command \"Your-Command\""
-
-# Restart a scheduled task
-ssh "<GAMING_PC_USER>"@<GAMING_PC_IP> "schtasks /run /tn \"Task Name\""
-```
 
 ## Documentation Update Rules
 
@@ -100,6 +79,16 @@ When you make changes, update docs based on what changed:
 - Choosing between alternatives
 - When in doubt, create one
 
+## Writing Plans
+
+Plans survive context clearing — invest tokens in context upfront rather than assuming the next session has prior context.
+
+- **Include why this work matters** — not just what to build, but the motivation
+- **Document what exists today** — current state, relevant files, deployed versions
+- **Reference relevant ADRs** — link decisions that constrain or inform the plan
+- **List prerequisites** — credentials, user actions, manual setup steps
+- **A new session reading the plan should understand the full picture** without re-reading other files
+
 ## Before Merging Checklist
 
 **STOP. Read `CONTRIBUTING.md` and verify:**
@@ -109,77 +98,6 @@ When you make changes, update docs based on what changed:
 - [ ] `.env.example` updated if new secrets added
 - [ ] `infrastructure/services.md` updated if services changed
 - [ ] Machine `README.md` updated if setup/config changed
-
-## File Organization
-
-```
-├── CLAUDE.md              # This file (start here)
-├── CONTRIBUTING.md        # Feature completion checklist
-├── .env.local.example     # Template for local IPs/usernames (copy to .env.local)
-├── next-steps.md          # Current sprint / active tasks
-├── future-plans.md        # Long-term phased roadmap
-├── completed.md           # Archive of completed work
-│
-├── infrastructure/        # Cross-machine documentation
-│   ├── network.md         # IPs, SSH commands, mounts
-│   └── services.md        # Service inventory (what runs where)
-│
-├── decisions/             # Architecture Decision Records
-│   └── README.md          # Index with summaries
-│
-├── rpi/                   # Raspberry Pi
-│   ├── README.md          # Setup, deploy commands, directory structure
-│   └── docker/            # Docker configs per service
-│
-├── gaming-pc/             # Gaming PC
-│   ├── README.md          # Setup, deploy commands, directory structure
-│   ├── docker/            # Docker configs
-│   ├── scripts/           # PowerShell scripts (metrics-endpoint.ps1)
-│   └── docs/              # Setup guides (LibreHardwareMonitor, etc.)
-│
-├── nas/                   # QNAP NAS
-│   ├── README.md          # Setup, SSH notes
-│   └── docker/            # Docker configs (Glances)
-│
-├── macbook/               # MacBook Air M4 (temporary LLM inference)
-│   └── README.md          # Ollama setup, brew services notes
-│
-├── mcp-servers/           # MCP servers (TypeScript, ADR-027)
-│   ├── docker-compose.yml # Deploys mcp-homelab + mcp-monitoring
-│   ├── Dockerfile         # Multi-stage Node.js build
-│   └── src/               # Server source code
-│
-└── reference/             # Deep-dive docs (read when needed)
-    ├── design-principles.md  # Detailed design guidelines (MCP-readiness, modularity)
-    ├── adr_appendix.md       # Extended ADR format guide
-    ├── persona.md            # User background/preferences
-    └── *.md                  # Historical research notes
-```
-
-## Finding Credentials
-
-**First:** Read `.env.local` for IPs and usernames. Then check machines for secrets:
-
-| Credential | Location | Command |
-|------------|----------|---------|
-| NAS password | Gaming PC Immich `.env` | `ssh "<GAMING_PC_USER>"@<GAMING_PC_IP> "type C:\Server_Data\Docker\immich\.env"` |
-| Immich API keys | Pi Homepage `.env` | `ssh <RPI_USER>@<RPI_IP> "cat ~/homepage/.env"` |
-| Pi service secrets | Pi `.env` files | `ssh <RPI_USER>@<RPI_IP> "cat ~/SERVICE_NAME/.env"` |
-| SMB credentials | Pi home | `ssh <RPI_USER>@<RPI_IP> "cat ~/.smbcredentials"` |
-
-## Quick Reference
-
-**Git remote**: `git@github.com:dancout/lomavo-lab.git`
-
-**Local config**: Copy `.env.local.example` to `.env.local` and fill in your IPs/usernames.
-
-**Service ports** (see `infrastructure/services.md` for full list):
-- Homepage: `<RPI_IP>:3000`
-- Uptime Kuma: `<RPI_IP>:3001`
-- Immich: `<GAMING_PC_IP>:2283`
-- Glances: `<RPI_IP>:61208`, `<GAMING_PC_IP>:61208`, `<NAS_IP>:61208`
-- metrics-endpoint: `<GAMING_PC_IP>:61209`
-- Ollama: `<GAMING_PC_IP>:11434`
-- Open WebUI: `<GAMING_PC_IP>:3080`
-- mcp-homelab: `<GAMING_PC_IP>:8770`
-- mcp-monitoring: `<GAMING_PC_IP>:8771`
+- [ ] Homepage widget added (if service has data to display)
+- [ ] Uptime Kuma entry communicated to user (URL, type, keyword)
+- [ ] Alerting covered (new Prometheus targets get "Scrape Target Down" for free)

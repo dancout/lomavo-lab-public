@@ -123,4 +123,4 @@ Every architectural decision is logged in the [`decisions/`](decisions/) directo
 **Phase 3 (AI & Automation)**: In progress (MCP servers deployed, GPU inference and Home Assistant next)
 **Phase 4 (Kubernetes)**: Planned
 
-See [`future-plans.md`](future-plans.md) for the full roadmap.
+See [`plans/README.md`](plans/README.md) for the full roadmap.

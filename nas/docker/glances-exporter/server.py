@@ -105,6 +105,19 @@ def build_metrics():
     except Exception:
         pass
 
+    # Folder sizes
+    try:
+        folders = fetch_json("folders")
+        lines.append("# HELP glances_folder_size_bytes Directory size in bytes")
+        lines.append("# TYPE glances_folder_size_bytes gauge")
+        # Map /rootfs paths back to host paths for cleaner labels
+        for f in folders:
+            path = f.get("path", "unknown")
+            label = sanitize(path.replace("/rootfs", ""))
+            lines.append(f'glances_folder_size_bytes{{path="{label}"}} {f.get("size", 0)}')
+    except Exception:
+        pass
+
     # Temperature sensors
     try:
         sensors = fetch_json("sensors")

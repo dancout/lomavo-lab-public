@@ -1,0 +1,9 @@
+services:
+  grafana-alerts-proxy:
+    build: .
+    container_name: grafana-alerts-proxy
+    restart: unless-stopped
+    ports:
+      - "8087:8080"
+    environment:
+      - GRAFANA_URL=${GRAFANA_URL}

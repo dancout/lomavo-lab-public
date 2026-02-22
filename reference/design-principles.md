@@ -2,6 +2,22 @@
 
 Overarching design principles for the lomavo homelab. See `CLAUDE.md` for a brief summary; this document provides deeper context.
 
+## Homelab Pillars
+
+Six values that guide every decision in this homelab:
+
+1. **Observability** — If you can't see it, you can't fix it. Every service gets monitoring (Homepage widget, Uptime Kuma, Prometheus metrics where applicable). Two-tier dashboards: consolidated for at-a-glance health, detailed for investigation.
+
+2. **Decision Retention** — Document non-obvious decisions as ADRs. Future-you will ask "why did we do it this way?" — the ADR should answer that question. When in doubt, create one.
+
+3. **Phased Work** — Ship something working at each phase. Don't design the perfect system upfront. Each phase builds on the last and delivers usable value independently.
+
+4. **Scalability** — Use abstraction layers, standard protocols (HTTP/JSON), and environment variables so services can be swapped, moved between machines, or replaced without major rewrites (ADR-005).
+
+5. **Transparency** — The repo is the single source of truth. Configs, decisions, and plans are version-controlled. If it's not in the repo, it doesn't exist (for documentation purposes).
+
+6. **Version Control as Fallback** — Everything should be recoverable from the repo. Docker compose files, configs, and documentation live here so any machine can be rebuilt from scratch.
+
 ## Core Principles
 
 ### 1. Modularity and Swappability (ADR-005)

@@ -10,10 +10,13 @@ services:
       - /:/rootfs:ro
       - /sys:/sys:ro
       - /proc:/proc:ro
+      - ./glances.conf:/etc/glances/glances.conf:ro
     environment:
-      - GLANCES_OPT=-w
+      - GLANCES_OPT=-w -C /etc/glances/glances.conf
     # Notes:
     # - QNAP uses /var/run/system-docker.sock (not /var/run/docker.sock)
     # - Mount /:/rootfs:ro to see host filesystem for storage metrics
     # - Storage shows at /rootfs/share/CACHEDEV1_DATA in Glances
     # - /sys and /proc mounts enable hardware sensor access for temperature readings
+    # - Custom config disables processlist/programlist (saves ~20% CPU on ARM)
+    #   and increases refresh interval to 5s (see glances.conf)

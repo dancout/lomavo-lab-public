@@ -1,11 +1,11 @@
 - Gaming PC:
     - Jellyfin:
         icon: jellyfin.png
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:8096
+        href: https://media.{{HOMEPAGE_VAR_DOMAIN}}
         description: Movie Server
     - Immich:
         icon: immich.svg
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:2283/
+        href: https://photos.{{HOMEPAGE_VAR_DOMAIN}}/
         description: Photo Library
         widget:
           type: immich
@@ -14,7 +14,7 @@
           version: 2
     - Immich Jobs:
         icon: immich.svg
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:2283/admin/jobs-status
+        href: https://photos.{{HOMEPAGE_VAR_DOMAIN}}/admin/jobs-status
         description: Processing Queue
         widget:
           type: customapi
@@ -32,7 +32,7 @@
               format: number
     - System:
         icon: mdi-desktop-tower-monitor
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+        href: https://metrics-pc.{{HOMEPAGE_VAR_DOMAIN}}
         description: CPU, RAM, Temperatures
         widget:
           type: customapi
@@ -55,7 +55,7 @@
               suffix: " C"
     - Storage:
         icon: mdi-harddisk
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+        href: https://metrics-pc.{{HOMEPAGE_VAR_DOMAIN}}
         description: Disk Usage
         widget:
           type: customapi
@@ -70,7 +70,7 @@
               format: percent
     - Network:
         icon: mdi-ethernet
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61209
+        href: https://metrics-pc.{{HOMEPAGE_VAR_DOMAIN}}
         description: Local / Tailscale Throughput
         widget:
           type: customapi
@@ -91,7 +91,7 @@
               format: bytes
     - Containers:
         icon: mdi-docker
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:61208
+        href: https://glances-pc.{{HOMEPAGE_VAR_DOMAIN}}
         description: Docker Metrics
         widget:
           type: glances
@@ -102,28 +102,20 @@
 - Raspberry Pi:
     - Pi-hole:
         icon: pi-hole.png
-        href: http://{{HOMEPAGE_VAR_RPI_IP}}/admin
+        href: https://pihole.{{HOMEPAGE_VAR_DOMAIN}}/admin
         description: Ad Blocker
         widget:
           type: pihole
-          url: http://{{HOMEPAGE_VAR_RPI_IP}}
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:8088
           version: 6
           key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
     - Vaultwarden:
         icon: bitwarden.png
-        href: https://{{HOMEPAGE_VAR_RPI_IP}}:8080
+        href: https://vault.{{HOMEPAGE_VAR_DOMAIN}}
         description: Password Vault
-    - Uptime Kuma:
-        icon: uptime-kuma.png
-        href: http://{{HOMEPAGE_VAR_RPI_IP}}:3001
-        description: Status Monitor
-        widget:
-          type: uptimekuma
-          url: http://{{HOMEPAGE_VAR_RPI_IP}}:3001
-          slug: dashboard
     - System:
         icon: mdi-raspberry-pi
-        href: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+        href: https://glances-pi.{{HOMEPAGE_VAR_DOMAIN}}
         description: CPU, RAM, Disk, Temp
         widget:
           type: customapi
@@ -145,7 +137,7 @@
               suffix: " C"
     - Network:
         icon: mdi-ethernet
-        href: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+        href: https://glances-pi.{{HOMEPAGE_VAR_DOMAIN}}
         description: Throughput
         widget:
           type: customapi
@@ -160,7 +152,7 @@
               format: bytes
     - Containers:
         icon: mdi-docker
-        href: http://{{HOMEPAGE_VAR_RPI_IP}}:61208
+        href: https://glances-pi.{{HOMEPAGE_VAR_DOMAIN}}
         description: Docker Metrics
         widget:
           type: glances
@@ -168,14 +160,57 @@
           version: 4
           metric: containers
 
+- Documents:
+    - Paperless-ngx:
+        icon: paperless-ngx.png
+        href: https://docs.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Document Management
+        widget:
+          type: paperlessngx
+          url: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:8776
+          key: {{HOMEPAGE_VAR_PAPERLESS_TOKEN}}
+    - Paperless Stats:
+        icon: paperless-ngx.png
+        href: https://docs.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Storage & Counts
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:8086
+          refreshInterval: 30000
+          mappings:
+            - field: documents
+              label: Documents
+              format: number
+            - field: storage_bytes
+              label: Storage
+              format: bytes
+    - Paperless Jobs:
+        icon: paperless-ngx.png
+        href: https://docs.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Processing Queue
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:8086
+          refreshInterval: 10000
+          mappings:
+            - field: active_tasks
+              label: Active
+              format: number
+            - field: pending_tasks
+              label: Pending
+              format: number
+            - field: failed_tasks
+              label: Failed
+              format: number
+
 - AI & MCP:
     - Open WebUI:
         icon: mdi-robot-outline
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:3080
+        href: https://chat.{{HOMEPAGE_VAR_DOMAIN}}
         description: Local LLM Chat (Ollama)
     - Ollama:
         icon: mdi-brain
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:11434
+        href: https://ollama.{{HOMEPAGE_VAR_DOMAIN}}
         description: Model Serving API
         widget:
           type: customapi
@@ -187,64 +222,131 @@
               format: number
     - MCP Servers:
         icon: mdi-server-network
-        href: http://{{HOMEPAGE_VAR_GAMING_PC_IP}}:8770/health
-        description: 5 MCP Servers (homelab, monitoring, immich, dns, docker)
+        href: https://mcp.{{HOMEPAGE_VAR_DOMAIN}}/health
+        description: 6 MCP Servers (homelab, monitoring, immich, dns, docker, documents)
     - MCP Activity:
         icon: mdi-chart-bar
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/f72f1dbc-b35a-410a-8307-b2774d9b2bf2/mcp-tools-overview
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/f72f1dbc-b35a-410a-8307-b2774d9b2bf2/mcp-tools-overview
         description: Tool Calls by Server - Last 6h
         widget:
           type: iframe
-          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/f72f1dbc-b35a-410a-8307-b2774d9b2bf2/mcp-tools-overview?panelId=5&theme=dark&refresh=30s
+          src: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d-solo/f72f1dbc-b35a-410a-8307-b2774d9b2bf2/mcp-tools-overview?panelId=5&theme=dark&refresh=30s
+          classes: h-48
+
+- Home Climate:
+    - Nest Thermostat:
+        icon: mdi-thermostat
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/nest-thermostat-001/nest-thermostat
+        description: Current Status
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:9102
+          refreshInterval: 60000
+          mappings:
+            - field: temperature_f
+              label: Temp
+              format: text
+              suffix: "°F"
+            - field: humidity
+              label: Humidity
+              format: text
+              suffix: "%"
+            - field: hvac_status
+              label: HVAC
+              format: text
+            - field: mode
+              label: Mode
+              format: text
+    - Temperature History:
+        icon: mdi-thermometer
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/nest-thermostat-001/nest-thermostat
+        description: Ambient & Setpoint - Last 24h
+        widget:
+          type: iframe
+          src: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d-solo/nest-thermostat-001/nest-thermostat?panelId=8&theme=dark&refresh=1m
           classes: h-48
 
 - Monitoring:
     - Grafana:
         icon: grafana.png
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}
         description: Dashboards & Alerting
+    - Active Alerts:
+        icon: mdi-alert-circle
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/alerting/groups
+        description: Grafana Alert Status
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_RPI_IP}}:8087
+          refreshInterval: 30000
+          mappings:
+            - field: firing
+              label: Firing
+              format: number
+            - field: pending
+              label: Pending
+              format: number
+            - field: normal
+              label: OK
+              format: number
+    - Alert Timeline:
+        icon: mdi-alert-decagram
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/outage-history-001/outage-history
+        description: Firing Alerts - Last 7 Days
+        widget:
+          type: iframe
+          src: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d-solo/outage-history-001/outage-history?panelId=1&theme=dark&refresh=1m
+          classes: h-48
     - Prometheus:
         icon: prometheus.png
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:9090
+        href: https://prometheus.{{HOMEPAGE_VAR_DOMAIN}}
         description: Metrics Storage
     - CPU History:
         icon: mdi-chart-line
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
         description: All Machines - Last Hour
         widget:
           type: iframe
-          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=25&theme=dark&refresh=30s
+          src: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=25&theme=dark&refresh=30s
           classes: h-48
     - RAM History:
         icon: mdi-memory
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
         description: All Machines - Last Hour
         widget:
           type: iframe
-          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=26&theme=dark&refresh=30s
+          src: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=26&theme=dark&refresh=30s
           classes: h-48
     - Temp History:
         icon: mdi-thermometer
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview
         description: CPU & GPU Temps - Last Hour
         widget:
           type: iframe
-          src: http://{{HOMEPAGE_VAR_NAS_IP}}:3030/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=29&theme=dark&refresh=30s
+          src: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}/d-solo/c3691750-d511-4958-9397-d2733fdf520d/homelab-overview?panelId=29&theme=dark&refresh=30s
           classes: h-48
 
 - QNAP NAS:
     - Pi-hole (Backup):
         icon: pi-hole.png
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:8089/admin
+        href: https://pihole-backup.{{HOMEPAGE_VAR_DOMAIN}}/admin
         description: Backup DNS Server
         widget:
           type: pihole
           url: http://{{HOMEPAGE_VAR_NAS_IP}}:8089
           version: 6
-          key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
+          key: {{HOMEPAGE_VAR_PIHOLE_BACKUP_KEY}}
+    - Uptime Kuma:
+        icon: uptime-kuma.png
+        href: https://status.{{HOMEPAGE_VAR_DOMAIN}}/dashboard
+        description: Status Monitor
+        widget:
+          type: uptimekuma
+          url: http://{{HOMEPAGE_VAR_NAS_IP}}:3001
+          slug: dashboard
     - System:
         icon: qnap.png
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:61208
+        href: https://glances-nas.{{HOMEPAGE_VAR_DOMAIN}}
         description: CPU, RAM, Swap, Temp
         widget:
           type: customapi
@@ -266,7 +368,7 @@
               suffix: " C"
     - Storage:
         icon: mdi-harddisk
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:8080
+        href: https://nas.{{HOMEPAGE_VAR_DOMAIN}}
         description: DataVol1 (Thick Volume)
         widget:
           type: customapi
@@ -282,9 +384,30 @@
             - field: "0.free"
               label: Vol Free
               format: bytes
+    - Service Data:
+        icon: mdi-database
+        href: https://grafana.{{HOMEPAGE_VAR_DOMAIN}}
+        description: Data Directory Sizes
+        widget:
+          type: customapi
+          url: http://{{HOMEPAGE_VAR_NAS_IP}}:61208/api/4/folders
+          refreshInterval: 30000
+          mappings:
+            - field: "0.size"
+              label: Prometheus
+              format: bytes
+            - field: "1.size"
+              label: Loki
+              format: bytes
+            - field: "2.size"
+              label: Grafana
+              format: bytes
+            - field: "3.size"
+              label: Pi-hole
+              format: bytes
     - Network:
         icon: mdi-ethernet
-        href: http://{{HOMEPAGE_VAR_NAS_IP}}:61208
+        href: https://glances-nas.{{HOMEPAGE_VAR_DOMAIN}}
         description: Throughput
         widget:
           type: customapi
@@ -313,3 +436,7 @@
         icon: si-digitalocean
         href: https://cloud.digitalocean.com/
         description: Cloud Infrastructure
+    - Discord:
+        icon: discord.png
+        href: "{{HOMEPAGE_VAR_DISCORD_URL}}"
+        description: Homelab Alerts Channel

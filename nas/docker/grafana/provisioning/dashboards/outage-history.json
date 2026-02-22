@@ -1,0 +1,161 @@
+{
+  "uid": "outage-history-001",
+  "title": "Outage History",
+  "tags": ["homelab", "alerts", "outages"],
+  "timezone": "browser",
+  "refresh": "1m",
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [
+        {
+          "expr": "grafana_alert_state",
+          "legendFormat": "{{alertname}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Alert Timeline",
+      "description": "Colored bands show when each alert was pending or firing",
+      "type": "state-timeline",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed" },
+          "mappings": [
+            {
+              "options": {
+                "0": { "text": "OK", "color": "green", "index": 0 },
+                "1": { "text": "PENDING", "color": "yellow", "index": 1 },
+                "2": { "text": "FIRING", "color": "red", "index": 2 }
+              },
+              "type": "value"
+            }
+          ],
+          "custom": {
+            "fillOpacity": 80
+          },
+          "noValue": "OK"
+        }
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "auto",
+        "alignValue": "center",
+        "rowHeight": 0.8
+      }
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "sum by (alertname)(count_over_time((grafana_alert_state == 2)[$__range]))",
+          "legendFormat": "{{alertname}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "title": "Cumulative Firing Duration (scrape intervals)",
+      "description": "Total number of 1-minute intervals each alert spent firing over the selected time range",
+      "type": "barchart",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short"
+        }
+      },
+      "options": {
+        "orientation": "horizontal",
+        "barWidth": 0.7,
+        "groupWidth": 0.7
+      }
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "id": 3,
+      "targets": [
+        {
+          "expr": "changes(grafana_alert_state[$__range])",
+          "legendFormat": "{{alertname}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "title": "Alert Frequency (state changes)",
+      "description": "Number of times each alert transitioned states in the selected time range",
+      "type": "stat",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short"
+        }
+      },
+      "options": {
+        "textMode": "auto",
+        "colorMode": "background",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        }
+      }
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 18 },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "grafana_alert_state",
+          "legendFormat": "{{alertname}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "title": "Current Alert Status",
+      "description": "All alert rules with their current state",
+      "type": "table",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "Normal", "color": "green", "index": 0 },
+                "1": { "text": "Pending", "color": "yellow", "index": 1 },
+                "2": { "text": "Firing", "color": "red", "index": 2 }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "includeByName": {
+              "alertname": true,
+              "severity": true,
+              "Value": true
+            },
+            "renameByName": {
+              "Value": "State"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}

@@ -1,0 +1,93 @@
+name: documents
+
+services:
+  paperless:
+    container_name: paperless
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    ports:
+      - "8776:8000"
+    environment:
+      PAPERLESS_REDIS: redis://paperless-redis:6379
+      PAPERLESS_DBHOST: paperless-postgres
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: ${PAPERLESS_DB_PASSWORD}
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
+      PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+      PAPERLESS_URL: https://docs.${DOMAIN}
+      PAPERLESS_TIME_ZONE: America/Detroit
+      PAPERLESS_OCR_LANGUAGE: eng
+      PAPERLESS_CONSUMER_RECURSIVE: "true"
+    volumes:
+      - nas-documents:/usr/src/paperless/media
+      - paperless-data:/usr/src/paperless/data
+      - paperless-export:/usr/src/paperless/export
+      - paperless-consume:/usr/src/paperless/consume
+    networks:
+      - documents
+    depends_on:
+      - paperless-postgres
+      - paperless-redis
+    # Notes:
+    # - Web UI: http://<GAMING_PC_IP>:8776 or https://docs.${DOMAIN} (LAN only)
+    # - Document media stored on NAS via CIFS volume (RAID 5 protected)
+    # - DB and data on Gaming PC SSD for performance
+
+  paperless-postgres:
+    container_name: paperless-postgres
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
+    volumes:
+      - paperless-pgdata:/var/lib/postgresql/data
+    networks:
+      - documents
+
+  paperless-redis:
+    container_name: paperless-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - documents
+
+  qdrant:
+    container_name: qdrant
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY}
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      - documents
+    # Notes:
+    # - Port 6333 exposed for mcp-documents (separate compose) and Prometheus scraping
+    # - API key required for all requests (QDRANT__SERVICE__API_KEY)
+    # - Prometheus metrics at :6333/metrics
+    # - Tiny footprint (~50-100MB even with thousands of documents)
+
+networks:
+  documents:
+    name: documents
+
+volumes:
+  paperless-pgdata:
+  paperless-data:
+  paperless-export:
+  paperless-consume:
+  qdrant-data:
+  nas-documents:
+    # External CIFS volume — must be created before running docker compose
+    # Create with: docker volume create --driver local \
+    #   --opt type=cifs \
+    #   --opt o=addr=<NAS_IP>,username=$NAS_USERNAME,password=$NAS_PASSWORD,vers=3.0,uid=1000,gid=1000 \
+    #   --opt device=//<NAS_IP>/Documents \
+    #   nas-documents
+    external: true

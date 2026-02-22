@@ -1,0 +1,168 @@
+{
+  "panels": [
+    {
+      "datasource": {
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "immich_jobs_active",
+          "legendFormat": "{{queue}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Active Jobs by Queue",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "immich_jobs_waiting",
+          "legendFormat": "{{queue}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Waiting Jobs by Queue",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "immich_jobs_failed",
+          "legendFormat": "{{queue}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Failed Jobs by Queue",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "immich_jobs_active_total",
+          "legendFormat": "Active",
+          "refId": "A"
+        },
+        {
+          "expr": "immich_jobs_waiting_total",
+          "legendFormat": "Waiting",
+          "refId": "B"
+        },
+        {
+          "expr": "immich_jobs_failed_total",
+          "legendFormat": "Failed",
+          "refId": "C"
+        }
+      ],
+      "title": "Total Active / Waiting / Failed",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "targets": [
+        {
+          "expr": "windows_cpu_usage_percent",
+          "legendFormat": "CPU %",
+          "refId": "A"
+        },
+        {
+          "expr": "windows_memory_usage_percent",
+          "legendFormat": "RAM %",
+          "refId": "B"
+        },
+        {
+          "expr": "windows_temperature_celsius{sensor=~\"CPU_Package|GPU_Hot_Spot\"}",
+          "legendFormat": "{{sensor}} \u00b0C",
+          "refId": "C"
+        }
+      ],
+      "title": "Gaming PC Hardware (During Jobs)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "tags": [
+    "homelab",
+    "immich"
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "Immich Jobs & Hardware",
+  "uid": "54fe7850-6777-4587-83ab-a3b2613d1286"
+}

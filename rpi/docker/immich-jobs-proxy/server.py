@@ -8,6 +8,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 IMMICH_URL = os.environ.get("IMMICH_URL", "http://localhost:2283")
 IMMICH_API_KEY = os.environ.get("IMMICH_API_KEY", "")
+IMMICH_STATS_API_KEY = os.environ.get("IMMICH_STATS_API_KEY", "")
 PORT = int(os.environ.get("PORT", "8080"))
 
 
@@ -20,6 +21,19 @@ class JobsHandler(BaseHTTPRequestHandler):
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
             return json.load(resp)
+
+    def _fetch_server_stats(self):
+        """Fetch server statistics from Immich API."""
+        key = IMMICH_STATS_API_KEY or IMMICH_API_KEY
+        req = urllib.request.Request(
+            f"{IMMICH_URL}/api/server/statistics",
+            headers={"x-api-key": key, "Accept": "application/json"},
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.load(resp)
+        except Exception:
+            return None
 
     def do_GET(self):
         if self.path == "/":
@@ -112,6 +126,27 @@ class JobsHandler(BaseHTTPRequestHandler):
             lines.append("# HELP immich_jobs_failed_total Total failed jobs across all queues")
             lines.append("# TYPE immich_jobs_failed_total gauge")
             lines.append(f"immich_jobs_failed_total {total_failed}")
+
+            # Server statistics (photos, videos, storage)
+            stats = self._fetch_server_stats()
+            if stats:
+                photos = 0
+                videos = 0
+                usage_bytes = 0
+                for user_stat in stats.get("usageByUser", []):
+                    photos += user_stat.get("photos", 0)
+                    videos += user_stat.get("videos", 0)
+                    usage_bytes += user_stat.get("usage", 0)
+
+                lines.append("# HELP immich_photos_total Total number of photos")
+                lines.append("# TYPE immich_photos_total gauge")
+                lines.append(f"immich_photos_total {photos}")
+                lines.append("# HELP immich_videos_total Total number of videos")
+                lines.append("# TYPE immich_videos_total gauge")
+                lines.append(f"immich_videos_total {videos}")
+                lines.append("# HELP immich_storage_bytes Total storage used in bytes")
+                lines.append("# TYPE immich_storage_bytes gauge")
+                lines.append(f"immich_storage_bytes {usage_bytes}")
 
             output = "\n".join(lines) + "\n"
             self.send_response(200)

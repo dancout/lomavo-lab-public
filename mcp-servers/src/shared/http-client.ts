@@ -65,3 +65,16 @@ export async function httpPut<T = unknown>(
   const data = (await response.json()) as T;
   return { status: response.status, data };
 }
+
+export async function httpDelete<T = unknown>(
+  url: string,
+  headers?: Record<string, string>,
+): Promise<HttpResponse<T>> {
+  const response = await fetch(url, {
+    method: 'DELETE',
+    headers: { Accept: 'application/json', ...headers },
+  });
+
+  const data = (await response.json()) as T;
+  return { status: response.status, data };
+}

@@ -46,7 +46,7 @@ Pi-hole advertises `<VIP>` (the Keepalived VIP) as the DNS server to all clients
 | `dhcp.active` | `true` |
 | `dhcp.start` | `10.0.0.10` |
 | `dhcp.end` | `10.0.0.100` |
-| `dhcp.router` | `10.0.0.1` |
+| `dhcp.router` | `<ROUTER_IP>` |
 | `misc.dnsmasq_lines` | `["dhcp-option=option:dns-server,<VIP>"]` |
 
 **Key technical detail:** By default, Pi-hole DHCP advertises itself as the DNS server. To advertise the VIP instead, we use a custom dnsmasq option via `misc.dnsmasq_lines`. This tells dnsmasq to send DHCP option 6 (dns-server) with the VIP address.
@@ -55,7 +55,7 @@ Pi-hole advertises `<VIP>` (the Keepalived VIP) as the DNS server to all clients
 ```bash
 sudo pihole-FTL --config dhcp.start '10.0.0.10'
 sudo pihole-FTL --config dhcp.end '10.0.0.100'
-sudo pihole-FTL --config dhcp.router '10.0.0.1'
+sudo pihole-FTL --config dhcp.router '<ROUTER_IP>'
 sudo pihole-FTL --config misc.dnsmasq_lines '["dhcp-option=option:dns-server,<VIP>"]'
 sudo pihole-FTL --config dhcp.active true
 ```

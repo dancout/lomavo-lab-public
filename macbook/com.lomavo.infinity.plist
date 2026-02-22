@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.lomavo.infinity</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/danielcouturier/infinity-venv/bin/infinity_emb</string>
+        <string>v2</string>
+        <string>--model-id</string>
+        <string>BAAI/bge-reranker-v2-m3</string>
+        <string>--port</string>
+        <string>7997</string>
+        <string>--device</string>
+        <string>mps</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/infinity.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/infinity.err</string>
+</dict>
+</plist>

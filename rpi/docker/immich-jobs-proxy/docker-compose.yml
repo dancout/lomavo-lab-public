@@ -8,3 +8,4 @@ services:
     environment:
       - IMMICH_URL=${IMMICH_URL}
       - IMMICH_API_KEY=${IMMICH_JOBS_API_KEY}
+      - IMMICH_STATS_API_KEY=${IMMICH_STATS_API_KEY}

@@ -31,6 +31,7 @@ services:
       - FTLCONF_webserver_port=80
       - FTLCONF_webserver_api_password=${PIHOLE_PASSWORD}
       - FTLCONF_webserver_api_app_sudo=true
+      - FTLCONF_misc_etc_dnsmasq_d=true
     volumes:
       - ./etc-pihole:/etc/pihole
       - ./etc-dnsmasq.d:/etc/dnsmasq.d
@@ -41,6 +42,8 @@ services:
     # - Upstream DNS is Google (not primary Pi-hole) to avoid circular dependency
     # - listeningMode=ALL needed because Docker bridge makes LAN appear non-local
     # - Pi-hole v6 uses FTLCONF_ env vars instead of v5's PIHOLE_DNS_ style
+    # - etc_dnsmasq_d=true enables loading custom dnsmasq configs from /etc/dnsmasq.d/
+    #   (contains 05-reverse-proxy.conf for wildcard DNS: *.<DOMAIN> → Pi)
 
   nebula-sync:
     image: ghcr.io/lovelaze/nebula-sync:latest
@@ -49,7 +52,7 @@ services:
     depends_on:
       - pihole
     environment:
-      - PRIMARY=http://<RPI_IP>|${PIHOLE_PASSWORD}
+      - PRIMARY=http://<RPI_IP>:8088|${PIHOLE_PASSWORD}
       - REPLICAS=http://pihole|${PIHOLE_PASSWORD}
       - FULL_SYNC=false
       - RUN_GRAVITY=true

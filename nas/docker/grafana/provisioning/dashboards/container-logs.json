@@ -1,0 +1,73 @@
+{
+  "panels": [
+    {
+      "datasource": {
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "options": {
+        "enableLogDetails": true,
+        "showCommonLabels": false,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "expr": "{machine=~\"$machine\", container=~\"$container\"}",
+          "refId": "A"
+        }
+      ],
+      "title": "Container Logs",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "tags": [
+    "homelab",
+    "logs"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "name": "machine",
+        "query": "label_values(machine)",
+        "refresh": 2,
+        "type": "query"
+      },
+      {
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "name": "container",
+        "query": "label_values({machine=~\"$machine\"}, container)",
+        "refresh": 2,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "Container Logs",
+  "uid": "5b961ec7-0728-45ab-a8f9-d23737e20cd1"
+}

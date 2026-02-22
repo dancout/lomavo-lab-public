@@ -1,3 +1,6 @@
+# TEMPLATE — Use deploy.sh to resolve variables before deploying
+# Variables: ${RPI_IP}, ${GAMING_PC_IP}, ${NAS_IP}, ${QDRANT_API_KEY}
+
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
@@ -7,7 +10,7 @@ scrape_configs:
   - job_name: "metrics-endpoint"
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["<GAMING_PC_IP>:61209"]
+      - targets: ["${GAMING_PC_IP}:61209"]
         labels:
           machine: "gpc"
 
@@ -15,7 +18,7 @@ scrape_configs:
   - job_name: "immich-jobs"
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["<RPI_IP>:8085"]
+      - targets: ["${RPI_IP}:8085"]
         labels:
           machine: "rpi"
           service: "immich"
@@ -23,13 +26,52 @@ scrape_configs:
   # Pi system metrics (CPU, RAM, disk, load, temps) via glances-exporter
   - job_name: "glances-rpi"
     static_configs:
-      - targets: ["<RPI_IP>:9101"]
+      - targets: ["${RPI_IP}:9101"]
         labels:
           machine: "rpi"
 
   # NAS system metrics (CPU, RAM, disk, load, temps) via glances-exporter
   - job_name: "glances-nas"
     static_configs:
-      - targets: ["<NAS_IP>:9101"]
+      - targets: ["${NAS_IP}:9101"]
         labels:
           machine: "nas"
+
+  # Nest thermostat metrics (temperature, humidity, HVAC status)
+  - job_name: "nest-thermostat"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["${RPI_IP}:9102"]
+        labels:
+          machine: "rpi"
+          service: "nest"
+
+  # Qdrant vector database metrics (ADR-033)
+  - job_name: "qdrant"
+    metrics_path: "/metrics"
+    authorization:
+      type: Bearer
+      credentials: ${QDRANT_API_KEY}
+    static_configs:
+      - targets: ["${GAMING_PC_IP}:6333"]
+        labels:
+          machine: "gpc"
+          service: "documents"
+
+  # Paperless-ngx document stats (count, storage, tasks)
+  - job_name: "paperless-stats"
+    scrape_interval: 300s
+    static_configs:
+      - targets: ["${RPI_IP}:8086"]
+        labels:
+          machine: "rpi"
+          service: "paperless"
+
+  # Grafana alert status counts
+  - job_name: "grafana-alerts"
+    scrape_interval: 60s
+    static_configs:
+      - targets: ["${RPI_IP}:8087"]
+        labels:
+          machine: "rpi"
+          service: "grafana"

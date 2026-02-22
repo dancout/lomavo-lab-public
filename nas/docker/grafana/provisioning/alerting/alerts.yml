@@ -1,0 +1,956 @@
+# Grafana Alert Rules — File Provisioning
+# These rules are loaded automatically on Grafana startup.
+# Changes here require SCP to NAS + Grafana restart.
+# Rules appear as read-only in the Grafana UI.
+apiVersion: 1
+
+groups:
+  # =========================================================================
+  # INFRASTRUCTURE — Scrape targets & metrics availability
+  # =========================================================================
+  - orgId: 1
+    name: infrastructure
+    folder: Homelab Alerts
+    interval: 1m
+    rules:
+      - uid: ffcfn42fce9kwe
+        title: Scrape Target Down
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: up
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B < 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          description: "The target {{ $labels.instance }} (job: {{ $labels.job }}) has been unreachable for more than 2 minutes."
+          summary: "Prometheus scrape target {{ $labels.job }} is down"
+        labels:
+          severity: critical
+        isPaused: false
+
+      - uid: cfczba5re1iwwd
+        title: Nest Metrics Missing
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 1200
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(nest_ambient_temperature_fahrenheit)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 1200
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 1200
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 15m
+        annotations:
+          description: "The core metric nest_ambient_temperature_fahrenheit has been absent for more than 15 minutes. The exporter may still be running but the Google SDM API response may have changed or authentication may have expired."
+          summary: "Nest thermostat metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: afczbsl30ukn4e
+        title: Glances Metrics Missing (Pi)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(glances_cpu_percent{job="glances-rpi"})
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "The core metric glances_cpu_percent for job glances-rpi has been absent for more than 5 minutes. The Glances API on the Pi may be down or the exporter may be returning empty data."
+          summary: "Pi Glances metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: bfczbsljt60aoe
+        title: Glances Metrics Missing (NAS)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(glances_cpu_percent{job="glances-nas"})
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "The core metric glances_cpu_percent for job glances-nas has been absent for more than 5 minutes. The Glances API on the NAS may be down or the exporter may be returning empty data."
+          summary: "NAS Glances metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: dfczbsm0dzqwwe
+        title: Windows Metrics Missing
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(windows_cpu_usage_percent)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "The core metric windows_cpu_usage_percent has been absent for more than 5 minutes. The PowerShell metrics-endpoint may be down or returning empty data."
+          summary: "Gaming PC Windows metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: afczbsmlemznke
+        title: Immich Jobs Metrics Missing
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(immich_jobs_active_total)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "The core metric immich_jobs_active_total has been absent for more than 5 minutes. The Immich API may be down or the jobs proxy may be returning empty data."
+          summary: "Immich jobs metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: gfczdt7kq8n4we
+        title: Qdrant Metrics Missing
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(app_info{job="qdrant"})
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "The core metric app_info for job qdrant has been absent for more than 5 minutes. The Qdrant vector database may be down."
+          summary: "Qdrant metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: hfczdx1paperless
+        title: Paperless Stats Metrics Missing
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(paperless_documents_total{job="paperless-stats"})
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 900
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 10m
+        annotations:
+          description: "The core metric paperless_documents_total has been absent for more than 10 minutes. The paperless-stats-proxy may be down."
+          summary: "Paperless stats metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: ifczdx2grafalrt
+        title: Grafana Alerts Metrics Missing
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: absent(grafana_alerts_total{job="grafana-alerts"})
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B == 1
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          description: "The core metric grafana_alerts_total has been absent for more than 5 minutes. The grafana-alerts-proxy may be down."
+          summary: "Grafana alerts metrics have stopped appearing"
+        labels:
+          severity: warning
+        isPaused: false
+
+  # =========================================================================
+  # HARDWARE — Temperature monitoring
+  # =========================================================================
+  - orgId: 1
+    name: hardware
+    folder: Homelab Alerts
+    interval: 1m
+    rules:
+      - uid: afcfn57coi7swe
+        title: High Temperature (Gaming PC)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: "windows_temperature_celsius{sensor=~\"CPU_Package|GPU_Hot_Spot\"}"
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: ($B > 80 && $B == $B)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          description: "Temperature has exceeded safe threshold for more than 2 minutes."
+          summary: "Gaming PC sensor {{ $labels.sensor }} is at {{ $values.B }}\u00b0C"
+        labels:
+          severity: critical
+        isPaused: false
+
+      - uid: efcgb36l965tsd
+        title: High Temperature (Pi/NAS)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: glances_temperature_celsius
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: ($B > 80 && $B == $B)
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          description: "Temperature has exceeded safe threshold for more than 2 minutes."
+          summary: "{{ $labels.machine }} sensor {{ $labels.label }} is at {{ $values.B }}\u00b0C"
+        labels:
+          severity: critical
+        isPaused: false
+
+  # =========================================================================
+  # RESOURCES — CPU, RAM, Disk usage
+  # =========================================================================
+  - orgId: 1
+    name: resources
+    folder: Homelab Alerts
+    interval: 1m
+    rules:
+      - uid: efcfn4h7g9la8c
+        title: High CPU Usage (Gaming PC)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: windows_cpu_usage_percent
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 90
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "CPU usage has exceeded 90% for more than 5 minutes."
+          summary: "Gaming PC CPU is at {{ $values.B }}%"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: dfcfn4pxc09hcb
+        title: High RAM Usage (Gaming PC)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: windows_memory_usage_percent
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 90
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "RAM usage has exceeded 90% for more than 5 minutes."
+          summary: "Gaming PC RAM is at {{ $values.B }}%"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: cfcfn4ysf1blsb
+        title: Disk Almost Full (Gaming PC)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: windows_disk_usage_percent
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 85
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "Disk usage has exceeded 85% for more than 5 minutes."
+          summary: "Gaming PC disk {{ $labels.drive }} is at {{ $values.B }}%"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: efcgb38q6jl6ob
+        title: High CPU Usage (Pi/NAS)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: glances_cpu_percent
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 90
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "CPU usage has exceeded 90% for more than 5 minutes."
+          summary: "{{ $labels.machine }} CPU is at {{ $values.B }}%"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: bfcgb38qbjdvkb
+        title: High RAM Usage (Pi/NAS)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: glances_memory_percent
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 90
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "RAM usage has exceeded 90% for more than 5 minutes."
+          summary: "{{ $labels.machine }} RAM is at {{ $values.B }}%"
+        labels:
+          severity: warning
+        isPaused: false
+
+      - uid: efcgb38qgj6kgf
+        title: Disk Almost Full (Pi/NAS)
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: "glances_fs_percent{mountpoint=~\"/rootfs|/rootfs/share/CACHEDEV1_DATA\"}"
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 85
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "Disk usage has exceeded 85% for more than 5 minutes."
+          summary: "{{ $labels.machine }} disk {{ $labels.mountpoint }} is at {{ $values.B }}%"
+        labels:
+          severity: warning
+        isPaused: false
+
+  # =========================================================================
+  # SERVICES — Application-level alerts
+  # =========================================================================
+  - orgId: 1
+    name: services
+    folder: Homelab Alerts
+    interval: 1m
+    rules:
+      - uid: dfcfn5g95h8u8d
+        title: Immich Failed Jobs
+        condition: C
+        data:
+          - refId: A
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: PBFA97CFB590B2093
+            model:
+              editorMode: code
+              expr: immich_jobs_failed_total
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            queryType: ""
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              expression: $B > 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: math
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          description: "Failed jobs have been detected across Immich queues for more than 5 minutes."
+          summary: "Immich has {{ $values.B }} failed jobs"
+        labels:
+          severity: warning
+        isPaused: false

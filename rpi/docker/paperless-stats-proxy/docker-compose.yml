@@ -1,0 +1,10 @@
+services:
+  paperless-stats-proxy:
+    build: .
+    container_name: paperless-stats-proxy
+    restart: unless-stopped
+    ports:
+      - "8086:8080"
+    environment:
+      - PAPERLESS_URL=${PAPERLESS_URL}
+      - PAPERLESS_TOKEN=${PAPERLESS_TOKEN}

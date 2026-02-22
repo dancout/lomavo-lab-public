@@ -1,0 +1,133 @@
+home.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy localhost:3000
+}
+
+vault.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy https://localhost:8080 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+status.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$NAS_IP}:3001
+}
+
+pihole.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy localhost:8088
+}
+
+photos.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:2283
+}
+
+media.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:8096
+}
+
+chat.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:3080
+}
+
+grafana.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$NAS_IP}:3030
+}
+
+prometheus.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$NAS_IP}:9090
+}
+
+pihole-backup.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$NAS_IP}:8089
+}
+
+glances-pi.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy localhost:61208
+}
+
+glances-pc.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:61208
+}
+
+glances-nas.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$NAS_IP}:61208
+}
+
+metrics-pc.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:61209
+}
+
+ollama.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:11434
+}
+
+mcp.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:8770
+}
+
+docs.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy {$GAMING_PC_IP}:8776
+}
+
+nas.{$DOMAIN} {
+	tls {
+		dns cloudflare {$CLOUDFLARE_API_TOKEN}
+	}
+	reverse_proxy https://{$NAS_IP}:443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}

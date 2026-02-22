@@ -1,0 +1,191 @@
+{
+  "uid": "storage-trends-001",
+  "title": "Storage Trends",
+  "tags": ["homelab", "storage"],
+  "timezone": "browser",
+  "refresh": "5m",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Immich (Photos & Videos)",
+      "type": "row"
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": true
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "immich_photos_total",
+          "legendFormat": "Photos",
+          "refId": "A"
+        },
+        {
+          "expr": "immich_videos_total",
+          "legendFormat": "Videos",
+          "refId": "B"
+        }
+      ],
+      "title": "Immich Photo & Video Counts",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": true
+          },
+          "unit": "bytes"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+      "id": 3,
+      "targets": [
+        {
+          "expr": "immich_storage_bytes",
+          "legendFormat": "Total Storage",
+          "refId": "A"
+        }
+      ],
+      "title": "Immich Storage Usage",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 },
+      "id": 4,
+      "title": "Paperless-ngx (Documents)",
+      "type": "row"
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": true
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 10 },
+      "id": 5,
+      "targets": [
+        {
+          "expr": "paperless_documents_total",
+          "legendFormat": "Documents",
+          "refId": "A"
+        }
+      ],
+      "title": "Paperless Document Count",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": true
+          },
+          "unit": "bytes"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 10 },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "paperless_storage_bytes",
+          "legendFormat": "Document Storage",
+          "refId": "A"
+        }
+      ],
+      "title": "Paperless Storage Usage",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
+      "id": 7,
+      "title": "NAS Disk & Monitoring Data",
+      "type": "row"
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": true
+          },
+          "unit": "bytes"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 19 },
+      "id": 8,
+      "targets": [
+        {
+          "expr": "glances_fs_used_bytes{machine=\"nas\"}",
+          "legendFormat": "{{mountpoint}}",
+          "refId": "A"
+        }
+      ],
+      "title": "NAS Disk Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": true
+          },
+          "unit": "bytes"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 19 },
+      "id": 9,
+      "targets": [
+        {
+          "expr": "glances_folder_size_bytes{machine=\"nas\"}",
+          "legendFormat": "{{label}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Monitoring Data Directories",
+      "type": "timeseries"
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}

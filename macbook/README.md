@@ -15,6 +15,7 @@
 | Service | Port | Install Method | Notes |
 |---------|------|---------------|-------|
 | Ollama | 11434 | Homebrew | LLM inference, M4 Neural Engine |
+| Infinity | 7997 | pip (venv) | Cross-encoder reranker for document search (ADR-034) |
 
 ## Setup
 
@@ -77,6 +78,13 @@ docker run -d --name open-webui --restart unless-stopped \
 
 # 2. On the MacBook — stop Ollama (frees resources, stops auto-start on login)
 brew services stop ollama
+
+# 3. On the MacBook — stop Infinity reranker (if installed)
+launchctl unload ~/Library/LaunchAgents/com.lomavo.infinity.plist
+rm ~/Library/LaunchAgents/com.lomavo.infinity.plist
+rm -rf ~/infinity-venv
+# Then remove RERANKER_URL from Gaming PC mcp-servers .env
+# and run: docker compose up -d mcp-documents
 ```
 
 ### To move inference back to the MacBook:
@@ -101,6 +109,70 @@ Replace `<MACBOOK_IP>` with the current IP (check with `ipconfig getifaddr en0` 
 
 **Note:** MCP server configs in Open WebUI are stored in the volume and persist
 across container recreations. You should not need to re-add them.
+
+## Infinity (Cross-Encoder Reranker)
+
+Infinity serves the `bge-reranker-v2-m3` cross-encoder model for reranking document search
+results. It runs in an isolated Python virtual environment to avoid affecting the system Python.
+
+**Setup:**
+```bash
+# Create dedicated venv
+python3 -m venv ~/infinity-venv
+
+# Install Infinity
+~/infinity-venv/bin/pip install "infinity-emb[all]"
+
+# Test it works
+~/infinity-venv/bin/infinity_emb v2 --model-id BAAI/bge-reranker-v2-m3 --port 7997 --device mps
+```
+
+**Auto-start via LaunchAgent:**
+```bash
+cp macbook/com.lomavo.infinity.plist ~/Library/LaunchAgents/
+launchctl load ~/Library/LaunchAgents/com.lomavo.infinity.plist
+```
+
+**Manage:**
+```bash
+# Check status
+launchctl list | grep infinity
+
+# View logs
+tail -f /tmp/infinity.log /tmp/infinity.err
+
+# Stop
+launchctl unload ~/Library/LaunchAgents/com.lomavo.infinity.plist
+
+# Restart
+launchctl unload ~/Library/LaunchAgents/com.lomavo.infinity.plist
+launchctl load ~/Library/LaunchAgents/com.lomavo.infinity.plist
+```
+
+**Memory budget:** qwen2.5:14b (~9GB) + nomic-embed-text (~274MB) + bge-reranker-v2-m3 (~568MB) = ~10GB of 24GB. Plenty of headroom.
+
+**Architecture:**
+```
+mcp-documents (Gaming PC:8775) --HTTP POST /rerank--> Infinity (MacBook:7997)
+                                                          |
+                                                          v
+                                                     M4 Neural Engine
+                                                     (cross-encoder scoring)
+```
+
+**Decommissioning (when migrating off MacBook):**
+```bash
+# 1. Stop Infinity and prevent auto-start
+launchctl unload ~/Library/LaunchAgents/com.lomavo.infinity.plist
+rm ~/Library/LaunchAgents/com.lomavo.infinity.plist
+
+# 2. Remove the venv
+rm -rf ~/infinity-venv
+
+# 3. On Gaming PC: remove RERANKER_URL from .env, then:
+#    docker compose up -d mcp-documents
+#    (search continues working — hybrid results without reranking)
+```
 
 ## Limitations
 

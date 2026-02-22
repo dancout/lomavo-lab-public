@@ -54,6 +54,19 @@ export function startServer(options: ServerOptions): void {
   const app = express();
   app.use(express.json());
 
+  // Bearer token auth for /mcp endpoint (MCP_API_KEY env var)
+  const apiKey = process.env.MCP_API_KEY;
+
+  app.use('/mcp', (req, res, next) => {
+    if (!apiKey) return next(); // No key configured = auth disabled
+    const auth = req.headers.authorization;
+    if (!auth || auth !== `Bearer ${apiKey}`) {
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
+    }
+    next();
+  });
+
   // MCP endpoint - stateless mode (new server+transport per request)
   app.post('/mcp', async (req, res) => {
     const start = Date.now();

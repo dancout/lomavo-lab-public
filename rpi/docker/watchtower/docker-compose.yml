@@ -2,10 +2,14 @@ services:
   watchtower:
     image: ghcr.io/nicholas-fedor/watchtower
     container_name: watchtower
+    restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - WATCHTOWER_NOTIFICATION_URL=generic://${STATUS_URL}/api/push/${UPTIME_KUMA_PUSH_TOKEN}?method=GET&status=up&msg=OK&ping=
+      - WATCHTOWER_NOTIFICATIONS_LEVEL=info
+      - WATCHTOWER_SCHEDULE=0 0 3 * * *
       - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_POLL_INTERVAL=86400
       - DOCKER_MIN_API_VERSION=1.24
-    restart: unless-stopped
+    env_file:
+      - .env

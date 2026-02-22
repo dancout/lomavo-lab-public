@@ -23,9 +23,14 @@ See `.env.local` for actual IPs and usernames.
 | mcp-immich | 8772 | MCP server: photo search, albums, job control (ADR-027) |
 | mcp-dns | 8773 | MCP server: Pi-hole stats, blocking, query log (ADR-027) |
 | mcp-docker | 8774 | MCP server: container management via socket + SSH (ADR-027) |
-| mcpo | 8766 | MCP-to-OpenAPI bridge for Open WebUI tool use (ADR-027) |
-
-**Note:** Watchtower is configured but **not running** - manual updates preferred (see below).
+| paperless-ngx | 8776 | Document management, OCR, tagging, web UI (ADR-033) |
+| paperless-postgres | - | PostgreSQL for Paperless metadata |
+| paperless-redis | - | Redis for Paperless task queue |
+| qdrant | - | Vector database for semantic search (internal only, ADR-033) |
+| mcp-documents | 8775 | MCP server: document search, sync, ingestion (ADR-033) |
+| mcpo | 8766 | Stopped — MCP-to-OpenAPI bridge for Open WebUI tool use (ADR-027) |
+| promtail | 9080 | Ships Gaming PC Docker logs to Loki on NAS (ADR-025) |
+| watchtower | - | Auto-updates containers daily at 3 AM, pushes heartbeat to Uptime Kuma |
 
 ### Native Windows Services
 | Service | Port | Description |
@@ -68,10 +73,16 @@ C:\Users\<GAMING_PC_USER>\Documents\Projects\lomavo-lab\  # Repo clone
     ├── .env                       # Machine IPs, API keys, service URLs
     └── src\                       # TypeScript source (homelab, monitoring, immich, dns, docker)
 
+C:\Server_Data\Docker\documents\    # Document management + vector search (ADR-033)
+├── docker-compose.yml
+├── .env
+└── (volumes managed by Docker)     # pgdata, qdrant-data, paperless-data
+
 D:\Server_Data\
 ├── Docker\
 │   └── watchtower\
-│       └── docker-compose.yml
+│       ├── docker-compose.yml
+│       └── .env                       # UPTIME_KUMA_PUSH_TOKEN
 ├── docker-compose.yml              # Jellyfin
 ├── Jellyfin_Config\
 ├── Jellyfin_Cache\
@@ -90,25 +101,15 @@ D:\Server_Data\
 
 See `.env.example` for required variables. Key secrets:
 - `DB_PASSWORD` - Immich PostgreSQL password
-- `RPI_IP` - Raspberry Pi IP for watchtower notifications
+- `UPTIME_KUMA_PUSH_TOKEN` - Watchtower push notification token
+- `PAPERLESS_DB_PASSWORD`, `PAPERLESS_SECRET_KEY`, `PAPERLESS_ADMIN_PASSWORD` - Paperless-ngx (in `documents/.env`)
+- `QDRANT_API_KEY` - Qdrant vector database (in `documents/.env`)
+- `MCP_API_KEY` - Bearer token for all MCP servers (in `mcp-servers/.env`)
 
 ## Known Issues
 
-### Watchtower HTTPS Problem
-Watchtower is configured to notify Uptime Kuma but expects HTTPS. Since we don't have a reverse proxy with HTTPS set up yet, this causes errors. See `future-plans.md` for reverse proxy setup plans.
-
-### Watchtower Config Mismatch (Intentional)
-The repo version of `gaming-pc/docker/watchtower/docker-compose.yml` uses `${RPI_IP}` for the notification URL, but the **actual Gaming PC** still has the hardcoded IP `<RPI_IP>`.
-
-**Reason:** We intentionally left this mismatch because:
-- Watchtower already has issues (HTTPS problem above)
-- The Pi IP is unlikely to change soon
-- Migrating adds risk for minimal benefit until we fix HTTPS anyway
-
-**Future task:** When fixing the watchtower HTTPS issue, also migrate to use `.env` file for `RPI_IP` to match the repo's parameterized version.
-
 ### pc_storage Mount Investigation
-The Raspberry Pi has this PC's `Server_Data` share mounted at `/home/<RPI_USER>/pc_storage`. Contains Immich library data (~626GB). **Status: Needs investigation** - unclear if actively used or experimental. See `future-plans.md`.
+The Raspberry Pi has this PC's `Server_Data` share mounted at `/home/<RPI_USER>/pc_storage`. Contains Immich library data (~626GB). **Status: Needs investigation** - unclear if actively used or experimental. See `plans/ideas-and-backlog.md`.
 
 ## Deployment
 
@@ -136,12 +137,13 @@ ssh "<GAMING_PC_USER>"@<GAMING_PC_IP>
 | `gaming-pc/docker/promtail/` | `C:\Server_Data\Docker\promtail\` |
 | `gaming-pc/docker/ollama/` | `C:\Server_Data\Docker\ollama\` |
 | `gaming-pc/docker/open-webui/` | `C:\Server_Data\Docker\open-webui\` |
+| `gaming-pc/docker/documents/` | `C:\Server_Data\Docker\documents\` |
 | `gaming-pc/docker/mcpo/` | `C:\Server_Data\Docker\mcpo\` |
 | `mcp-servers/` | Runs from repo clone (builds Docker image in-place) |
 
 ## Updating Services Manually
 
-Since Watchtower is not running, update containers manually:
+Watchtower auto-updates containers daily at 3 AM. To update immediately:
 
 ```cmd
 cd C:\Server_Data\Docker\immich
@@ -301,6 +303,23 @@ copy .env.example .env
 docker compose up -d --build
 ```
 
+### Authentication
+
+All MCP `/mcp` endpoints require Bearer token authentication when `MCP_API_KEY` is set in `.env`:
+
+```bash
+# Without auth → 401
+curl -X POST http://<GAMING_PC_IP>:8770/mcp
+
+# With auth → 200
+curl -X POST http://<GAMING_PC_IP>:8770/mcp -H "Authorization: Bearer <MCP_API_KEY>"
+
+# Health check → always 200 (no auth required)
+curl http://<GAMING_PC_IP>:8770/health
+```
+
+Configure the token in Open WebUI's MCP server settings and in Claude Code's `.mcp.json` headers.
+
 ### Verify
 
 ```bash
@@ -311,7 +330,9 @@ curl http://<GAMING_PC_IP>:8773/health   # mcp-dns
 curl http://<GAMING_PC_IP>:8774/health   # mcp-docker
 ```
 
-### MCPO (MCP-to-OpenAPI Bridge)
+### MCPO (MCP-to-OpenAPI Bridge) — Stopped
+
+> **Status:** Stopped. Not needed — Open WebUI has native MCP support (Streamable HTTP). Instructions retained for reference; cleanup tracked in Phase 3E.
 
 Bridges MCP servers for Open WebUI tool use.
 
@@ -328,6 +349,34 @@ curl http://<GAMING_PC_IP>:8766/docs   # MCPO OpenAPI spec
 ### MCP Client Configuration
 
 Claude Code connects via `.mcp.json` at the repo root (gitignored, contains real IPs). See `.mcp.json.example` for the template.
+
+## Documents Stack (ADR-033)
+
+Personal document management and semantic search. Privacy-sensitive — only accessible to self-hosted LLM via Open WebUI, NOT Claude Code.
+
+### Prerequisites
+
+1. Create NAS SMB share for documents (e.g., `Documents`)
+2. Create CIFS Docker volume:
+   ```cmd
+   docker volume create --driver local --opt type=cifs --opt o=addr=<NAS_IP>,username=<NAS_USER>,password=<NAS_PASSWORD>,vers=3.0,uid=1000,gid=1000 --opt device=//<NAS_IP>/Documents nas-documents
+   ```
+
+### Deploy
+
+```cmd
+cd C:\Server_Data\Docker\documents
+copy .env.example .env
+REM Edit .env with actual passwords/keys
+docker compose up -d
+```
+
+### Verify
+
+```bash
+curl http://<GAMING_PC_IP>:8776/api/           # Paperless API
+curl https://docs.<DOMAIN>                    # Paperless via Caddy (LAN only)
+```
 
 ## Notes
 

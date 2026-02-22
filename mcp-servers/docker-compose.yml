@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     ports:
       - "8770:8770"
+    env_file:
+      - .env
     environment:
       - PORT=8770
       - REPO_PATH=/repo
@@ -94,3 +96,29 @@ services:
     # - Security: SSH key access is temporary; Phase 3E will create dedicated keys
     # - Health check: http://<GAMING_PC_IP>:8774/health
     # - MCP endpoint: http://<GAMING_PC_IP>:8774/mcp
+
+  mcp-documents:
+    build: .
+    container_name: mcp-documents
+    restart: unless-stopped
+    ports:
+      - "8775:8775"
+    env_file:
+      - .env
+    environment:
+      - PORT=8775
+      - PAPERLESS_URL=http://${GAMING_PC_IP}:8776
+      - QDRANT_URL=http://${GAMING_PC_IP}:6333
+      - OLLAMA_URL=http://${MACBOOK_IP}:11434
+      - EMBEDDING_MODEL=nomic-embed-text
+      - RERANKER_URL=${RERANKER_URL:-}
+      - RERANKER_MODEL=${RERANKER_MODEL:-BAAI/bge-reranker-v2-m3}
+      - TZ=America/Detroit
+    command: ["node", "dist/documents/index.js"]
+    # Notes:
+    # - PRIVACY: NOT added to Claude Code .mcp.json — Open WebUI only (ADR-033)
+    # - Connects to Paperless-ngx, Qdrant, and Ollama for embeddings
+    # - PAPERLESS_TOKEN and QDRANT_API_KEY loaded from .env
+    # - Auto-syncs Paperless → Qdrant every 5 minutes
+    # - Health check: http://<GAMING_PC_IP>:8775/health
+    # - MCP endpoint: http://<GAMING_PC_IP>:8775/mcp

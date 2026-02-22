@@ -12,7 +12,7 @@ This directory contains Architecture Decision Records (ADRs) documenting signifi
 | ADR-004 | Version Control Deployment Workflow | git, deployment, docker | Canonical configs in repo, scp to machines, .env files stay on target machines |
 | ADR-005 | Modular and Extensible Architecture | architecture, modularity, interfaces, future-proofing | Design integrations with abstraction layers so services can be swapped without major rewrites |
 | ADR-006 | Windows OpenSSH Setup for Gaming PC | ssh, windows, gaming-pc, authentication | OpenSSH Server with admin authorized_keys path for SSH key auth |
-| ADR-007 | Intentional Watchtower Config Mismatch | watchtower, gaming-pc, config, deferred | Leave hardcoded IP on Gaming PC until HTTPS fix, repo has parameterized version |
+| ADR-007 | Intentional Watchtower Config Mismatch | watchtower, gaming-pc, config, deferred | **Superseded** — Watchtower reactivated with HTTPS push via Caddy (ADR-031) |
 | ADR-008 | NAS Storage Configuration | nas, raid5, storage, logs | RAID 5 for all storage including logs; thick volume; 20% snapshot space |
 | ADR-009 | Immich NAS Storage Architecture | immich, nas, docker, cifs, storage | Docker CIFS volumes for NAS access; hybrid storage with thumbnails local |
 | ADR-010 | Homepage Services Configuration Templating | homepage, templating, secrets, config | Track services.yaml in git using {{HOMEPAGE_VAR_*}} templating with env_file directive |
@@ -33,6 +33,15 @@ This directory contains Architecture Decision Records (ADRs) documenting signifi
 | ADR-025 | Prometheus + Grafana + Loki Monitoring Stack | prometheus, grafana, loki, monitoring, alerting, nas | Historical metrics, Discord alerting, centralized logs on NAS; Prometheus scrapes metrics-endpoint and immich-jobs-proxy; Grafana dashboards + alert rules |
 | ADR-026 | Ollama Local LLM Deployment on Gaming PC | ollama, llm, open-webui, gaming-pc | CPU-only Ollama with Qwen 2.5 7B models; Open WebUI chat interface; GPU deferred to Phase 3E |
 | ADR-027 | MCP Server Architecture for Homelab Integration | mcp, typescript, llm, automation | Per-domain MCP servers on Gaming PC via Streamable HTTP; TypeScript + express; Claude Code and Open WebUI as clients |
+| ADR-028 | Nest Thermostat Monitoring via Custom Exporter | nest, thermostat, prometheus, sdm-api, monitoring | Custom Python exporter on Pi polls Google SDM API; serves Prometheus metrics at port 9102 |
+| ADR-029 | New Service Deployment Checklist | process, checklist, observability, documentation | Consolidated checklist in CONTRIBUTING.md for adding services; covers prerequisites, Homepage, Uptime Kuma, alerting |
+| ADR-030 | Grafana Dashboard File Provisioning | grafana, dashboards, provisioning, version-control | All 6 dashboards exported to JSON and file-provisioned; read-only in UI, changes via repo |
+| ADR-031 | Reverse Proxy with Caddy and Split-Horizon DNS | caddy, reverse-proxy, https, dns, cloudflare | Caddy on Pi with Cloudflare DNS-01 for HTTPS; wildcard dnsmasq on both Pi-holes; LAN-only friendly URLs |
+| ADR-032 | Pre-built Caddy Docker Image Over Building from Source | caddy, docker, arm, build | Use `caddybuilds/caddy-cloudflare` pre-built image; xcaddy build infeasible on Pi's 1GB RAM |
+| ADR-033 | Document Storage and Semantic Search Architecture | paperless, qdrant, mcp, documents, privacy | Paperless-ngx + Qdrant + mcp-documents for semantic search over personal docs; self-hosted LLM only, not exposed to Claude Code |
+| ADR-034 | Hybrid Search with BM25 and Cross-Encoder Reranking | qdrant, bm25, hybrid-search, reranking, infinity | Qdrant built-in BM25 sparse vectors + RRF fusion for keyword+semantic search; optional Infinity cross-encoder reranking on MacBook |
+| ADR-035 | Document Search Improvements for LLM Usability | mcp, documents, search, tags, llm | Default source_type to 'document', graceful tag validation, filename in BM25 + results, list_tags tool, LLM-guiding descriptions |
+| ADR-036 | Prometheus Config Variable Substitution | prometheus, secrets, envsubst, deploy | Mac-side envsubst deploy script resolves ${VAR} placeholders in prometheus.yml before SCP to NAS |
 
 ## Format
 
