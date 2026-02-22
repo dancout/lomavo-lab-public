@@ -42,6 +42,7 @@ This directory contains Architecture Decision Records (ADRs) documenting signifi
 | ADR-034 | Hybrid Search with BM25 and Cross-Encoder Reranking | qdrant, bm25, hybrid-search, reranking, infinity | Qdrant built-in BM25 sparse vectors + RRF fusion for keyword+semantic search; optional Infinity cross-encoder reranking on MacBook |
 | ADR-035 | Document Search Improvements for LLM Usability | mcp, documents, search, tags, llm | Default source_type to 'document', graceful tag validation, filename in BM25 + results, list_tags tool, LLM-guiding descriptions |
 | ADR-036 | Prometheus Config Variable Substitution | prometheus, secrets, envsubst, deploy | Mac-side envsubst deploy script resolves ${VAR} placeholders in prometheus.yml before SCP to NAS |
+| ADR-037 | Environment Variable Standardization | env, config, standardization, best-practices | Standardize on `.env` (not `.env.local`) as template and local config filename; aligns with industry conventions |
 
 ## Format
 

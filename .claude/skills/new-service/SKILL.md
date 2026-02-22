@@ -54,6 +54,7 @@ Deploy a new service end-to-end following CONTRIBUTING.md's "New Service Deploym
 - [ ] `next-steps.md` — mark items complete
 - [ ] Relevant `plans/*.md` topic file — check off completed items
 - [ ] `completed.md` — add summary
+- [ ] `README.md` — architecture diagram, MCP table (if MCP server), tech stack, service count
 
 ### Reminders
 

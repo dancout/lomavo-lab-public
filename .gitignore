@@ -1,15 +1,18 @@
 # Local configuration with real IPs/usernames/secrets
+.env
 .env.local
 
-# Environment files with sensitive data
-.env
+# User-specific homelab profile (created from .example by setup script)
+HOMELAB_PROFILE.md
+
+# Environment files with sensitive data (per-machine)
 .env.rpi
 .env.gaming-pc
 .env.nas
 rpi/.env
 gaming-pc/.env
 nas/.env
-# Keep .env.example tracked
+# Keep templates tracked
 !.env.example
 !rpi/.env.example
 !gaming-pc/.env.example

@@ -3,7 +3,7 @@
 Host: `<GAMING_PC_IP>` (Ethernet via TrendNet switch)
 SSH: `ssh "<GAMING_PC_USER>"@<GAMING_PC_IP>` (note: username may require quotes if it has spaces)
 
-See `.env.local` for actual IPs and usernames.
+See `.env` for actual IPs and usernames.
 
 ## Services
 
@@ -28,7 +28,6 @@ See `.env.local` for actual IPs and usernames.
 | paperless-redis | - | Redis for Paperless task queue |
 | qdrant | - | Vector database for semantic search (internal only, ADR-033) |
 | mcp-documents | 8775 | MCP server: document search, sync, ingestion (ADR-033) |
-| mcpo | 8766 | Stopped — MCP-to-OpenAPI bridge for Open WebUI tool use (ADR-027) |
 | promtail | 9080 | Ships Gaming PC Docker logs to Loki on NAS (ADR-025) |
 | watchtower | - | Auto-updates containers daily at 3 AM, pushes heartbeat to Uptime Kuma |
 
@@ -138,7 +137,6 @@ ssh "<GAMING_PC_USER>"@<GAMING_PC_IP>
 | `gaming-pc/docker/ollama/` | `C:\Server_Data\Docker\ollama\` |
 | `gaming-pc/docker/open-webui/` | `C:\Server_Data\Docker\open-webui\` |
 | `gaming-pc/docker/documents/` | `C:\Server_Data\Docker\documents\` |
-| `gaming-pc/docker/mcpo/` | `C:\Server_Data\Docker\mcpo\` |
 | `mcp-servers/` | Runs from repo clone (builds Docker image in-place) |
 
 ## Updating Services Manually
@@ -328,22 +326,6 @@ curl http://<GAMING_PC_IP>:8771/health   # mcp-monitoring
 curl http://<GAMING_PC_IP>:8772/health   # mcp-immich
 curl http://<GAMING_PC_IP>:8773/health   # mcp-dns
 curl http://<GAMING_PC_IP>:8774/health   # mcp-docker
-```
-
-### MCPO (MCP-to-OpenAPI Bridge) — Stopped
-
-> **Status:** Stopped. Not needed — Open WebUI has native MCP support (Streamable HTTP). Instructions retained for reference; cleanup tracked in Phase 3E.
-
-Bridges MCP servers for Open WebUI tool use.
-
-```bash
-# Deploy
-scp gaming-pc/docker/mcpo/docker-compose.yml "<GAMING_PC_USER>"@<GAMING_PC_IP>:"C:\Server_Data\Docker\mcpo\docker-compose.yml"
-scp gaming-pc/docker/mcpo/config.json "<GAMING_PC_USER>"@<GAMING_PC_IP>:"C:\Server_Data\Docker\mcpo\config.json"
-ssh "<GAMING_PC_USER>"@<GAMING_PC_IP> "cd C:\Server_Data\Docker\mcpo && docker compose up -d"
-
-# Verify
-curl http://<GAMING_PC_IP>:8766/docs   # MCPO OpenAPI spec
 ```
 
 ### MCP Client Configuration

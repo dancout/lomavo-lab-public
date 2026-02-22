@@ -4,6 +4,54 @@ Archive of completed milestones. See `plans/README.md` for future roadmap, git l
 
 ## February 2026
 
+**New User Onboarding, Homelab Profile Setup, & .env Standardization (Feb 22)**
+- Created `GETTING_STARTED.md` — positions repo as both deployed reference and reusable framework, with Quick Start, SSH prerequisites, key files reading order
+- Created `HOMELAB_PROFILE.md.example` — structured template for hardware inventory, experience level, goals, deviations from reference architecture
+- Created `scripts/new-user-setup.sh` — one-time activation script that archives owner's `completed.md` and `next-steps.md` to `archive/`, creates clean slate, copies `.env` and `HOMELAB_PROFILE.md` templates
+- Created `archive/README.md` — explains purpose of archived files
+- Updated `README.md` — reframed About section to acknowledge dual nature (deployed reference + reusable template), added Getting Started callout, updated repo structure
+- Updated `CLAUDE.md` — added `HOMELAB_PROFILE.md` to "What to Read When" table, updated .env reference
+- Deleted stale `.env.example` file
+- Refactored env setup to use standard practice: renamed `.env.local.example` → `.env.example`, updated all docs and scripts to reference `.env` instead of `.env.local`, updated `.gitignore` to ignore `.env` (local config) and track `.env.example` (template)
+- Updated `reference/file-organization.md`, `reference/deploy-commands.md`, `reference/credentials.md` for new env standards
+- Created `decisions/ADR-037` documenting the decision to standardize on `.env` (industry best practice)
+- Updated `decisions/README.md` with new ADR
+- Resolves Priority 1 (new user confusion) and Priority 3 (homelab profile/onboarding refactor)
+
+**Fix Custom Agents (Feb 22)**
+- Fixed 4 agent files in `.claude/agents/` — added required `name` and `description` frontmatter fields, fixed `mcp_servers` → `mcpServers` (camelCase)
+- Agents: researcher (haiku, read-only investigation), monitor (haiku, health checks), deployer (sonnet, service deployment), documenter (sonnet, doc updates)
+
+**README Accuracy & Process Improvements (Feb 22)**
+- Fixed 10 discrepancies in README.md: ADR count (27→36), MCP servers (5→6), service count (30+→45+)
+- Updated architecture diagram to include Caddy (HTTPS reverse proxy), Paperless-ngx, Qdrant, Nest Exporter
+- Updated tech stack table: added Caddy to Networking, added Documents row (Paperless + Qdrant)
+- Updated repository structure: added `plans/` and `runbooks/` directories
+- Updated phase status: Phase 2 (reverse proxy is DONE, only WoL remaining), Phase 3 (document search deployed)
+- Added README to documentation enforcement: CLAUDE.md doc rules + merge checklist, CONTRIBUTING.md config updates, /new-service skill Phase 5, /commit skill pre-commit checks
+- Prevents future drift: README now explicitly tied to 5 workflow points instead of zero
+
+**Fuzzy Search on ADRs**
+- [x] Fix mcp-homelab ADR filename resolution (include full filenames in `list_decisions` or fuzzy-match in `read_file`)
+
+**Public Repo Sync & Sensitive Value Scrubbing (Feb 21)**
+- Created `sync-to-public.sh` — copies only git-tracked files to public repo, validates no .env.local leaks, commits with date stamp (safe: user pushes manually)
+- Scrubbed ~30 remaining hardcoded IPs, usernames, domains from 17 files — replaced with `<PLACEHOLDER>` format per ADR-018
+- Templatized watchtower and documents docker-compose files — `<STATUS_URL>` and `<DOMAIN>` now use `${STATUS_URL}` and `${DOMAIN}` env vars
+- Created `check-secrets.sh` (~0.4s scan) and `/secrets-check` skill — identifies any .env.local values exposed in tracked files (word-boundary IP matching, software-name false positive filtering)
+- Improved IP matching in sync scripts to avoid substring false positives (e.g., `<EXAMPLE_IP>` inside `<EXAMPLE_RANGE>`)
+- Public repo sync passed validation: 206 tracked files synced with zero leaks detected
+
+**MCPO Cleanup (Feb 21)**
+- Deleted `gaming-pc/docker/mcpo/` directory (docker-compose.yml + config.json)
+- Removed MCPO row from Gaming PC services table and services inventory
+- Removed MCPO directory mapping from Gaming PC README directory table
+- Removed entire "MCPO (MCP-to-OpenAPI Bridge)" deployment section from Gaming PC README
+- Checked off MCPO cleanup items in `plans/mcp-enhancements.md`
+- Removed MCPO cleanup task from `next-steps.md`
+- **User action:** Delete `C:\Server_Data\Docker\mcpo\` on Gaming PC (or agent can attempt via SSH)
+- All remaining MCPO references are in historical/completed files (ADR-026, completed.md) and plan checklist
+
 **Documentation Backfill (Feb 21)**
 - Fixed WireGuard port in `infrastructure/services.md` (51820 → 51194, matching deployed config and Pi README)
 - Added missing Promtail and Watchtower rows to Gaming PC services table

@@ -50,6 +50,7 @@ Based on the changes in the diff, verify each applicable item from CONTRIBUTING.
 - [ ] `.env.example` updated if new environment variables added
 - [ ] `infrastructure/services.md` updated if services changed
 - [ ] Machine README updated if setup/config changed
+- [ ] `README.md` updated if services, architecture, or tech stack changed
 
 **Observability (if new service added):**
 - [ ] Homepage widget added
@@ -60,7 +61,7 @@ Report gaps found. If gaps exist, list them clearly and ask whether to fix them 
 ### 3. Stage and Commit
 
 - Stage files explicitly by name — NEVER use `git add -A` or `git add .`
-- NEVER stage `.env.local` or files containing secrets
+- NEVER stage `.env` or `.mcp.json` or other files containing secrets
 - If the user provided a commit message argument, use it
 - Otherwise, draft a concise commit message from the diff (1-2 sentences, "why" not "what")
 - Follow the commit message style from recent git log

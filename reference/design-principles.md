@@ -93,7 +93,7 @@ The repository should be safe for public sharing without exposing network-specif
 - Never hardcode IPs, usernames, or domain names in committed files
 - Use placeholders (`<RPI_IP>`, `<GAMING_PC_USER>`, etc.) in documentation
 - Use environment variable templating in deployment configs
-- Store actual values in gitignored `.env.local` (repo root) or `.env` files (service directories)
+- Store actual values in gitignored `.env` (repo root) or per-service `.env` files
 
 **Placeholder conventions:**
 | Placeholder | Description |

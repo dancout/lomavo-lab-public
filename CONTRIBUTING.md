@@ -38,6 +38,7 @@ See "Task File Sync Process" below for details.
 - [ ] Update `docker-compose.yml` files in repo if changed on actual machines
 - [ ] Update `infrastructure/network.md` if IPs, SSH, or mounts changed
 - [ ] Update `infrastructure/services.md` if services were added/modified
+- [ ] Update `README.md` architecture diagram, service counts, and tech stack if services were added/removed
 
 **Machine-Specific Docs:**
 - [ ] Update relevant machine README (`rpi/`, `gaming-pc/`, `nas/`) if setup changed:

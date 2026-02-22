@@ -15,4 +15,4 @@ Research ideas and cleanup tasks.
   - Contains Immich encoded videos (~626GB)
   - Unclear if actively used or experimental
   - Determine if this should migrate to NAS or be removed
-- [ ] Add `NEST_USER` to `.env.local` / `.env.local.example` — Nest account username not currently tracked anywhere in repo
+- [ ] Add `NEST_USER` to `.env` / `.env.example` — Nest account username not currently tracked anywhere in repo

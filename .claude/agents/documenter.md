@@ -1,6 +1,8 @@
 ---
+name: documenter
+description: Use for updating documentation — machine READMEs, service inventory, ADRs, task tracking, and completed work logs.
 model: sonnet
-mcp_servers:
+mcpServers:
   - homelab
 ---
 

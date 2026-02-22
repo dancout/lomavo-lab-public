@@ -1,7 +1,7 @@
 # NAS Configuration
 
 **Device:** QNAP TS-433
-**Host:** `<NAS_IP>` (see `.env.local` for actual value)
+**Host:** `<NAS_IP>` (see `.env` for actual value)
 **OS:** QTS 5.2
 **Access:** Web UI at `http://<NAS_IP>:8080`, SMB at `smb://<NAS_IP>`
 
@@ -139,7 +139,7 @@ QNAP has no persistent sysctl config. The `sysctl-init` container in the Pi-hole
 ./nas/docker/prometheus/deploy.sh
 ```
 
-**Note:** `deploy.sh` runs on the deployment node (currently MacBook) to resolve variables from `.env.local` before deploying to NAS. It uses `envsubst` (standard Unix tool, no project dependencies). If not available, the script provides install instructions. Can be run from any Unix system or container with NAS network access.
+**Note:** `deploy.sh` runs on the deployment node (currently MacBook) to resolve variables from `.env` before deploying to NAS. It uses `envsubst` (standard Unix tool, no project dependencies). If not available, the script provides install instructions. Can be run from any Unix system or container with NAS network access.
 
 **Docker-compose only (no variable substitution):**
 ```bash

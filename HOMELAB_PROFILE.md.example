@@ -1,0 +1,38 @@
+# My Homelab Profile
+
+Quick reference for me and my AI agent. Update as hardware changes.
+
+## Hardware Inventory
+
+| Machine | Hostname | Role | Key Specs |
+|---------|----------|------|-----------|
+| [e.g. Raspberry Pi 4 8GB] | rpi | DNS, proxy, core services | ARM64, 8GB RAM |
+| [e.g. Gaming PC, Windows 11] | gaming-pc | Media server, AI inference | RTX 3080, 32GB RAM |
+| [e.g. QNAP NAS TS-433] | nas | Storage, monitoring stack | 4x4TB RAID 5 |
+
+## Network
+
+- LAN subnet: `10.0.0.0/24`
+- Router IP: `10.0.0.1`
+- Pi-hole VIP (if using HA DNS): `10.0.0.X`
+
+## Experience Level
+
+[e.g. Senior developer (10 years: Angular, Python, Node). New to infrastructure and homelabbing.]
+
+## Goals
+
+What I want to run:
+- [ ] Ad-blocking DNS (Pi-hole)
+- [ ] Photo library (Immich)
+- [ ] Password manager (Vaultwarden)
+- [ ] Media server (Jellyfin)
+- [Add your own goals here]
+
+## Current Phase
+
+[e.g. Phase 1 in progress: basic network setup, SSH, first services.]
+
+## Deviations from Reference Architecture
+
+[Note where your setup differs from the original owner's, e.g. "No QNAP NAS — using Synology DS923+"]

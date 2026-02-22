@@ -1,6 +1,6 @@
 # Deploy Commands
 
-Quick reference for deploying configs to homelab machines. Replace `<PLACEHOLDERS>` with values from `.env.local`.
+Quick reference for deploying configs to homelab machines. Replace `<PLACEHOLDERS>` with values from `.env`.
 
 ## Raspberry Pi
 

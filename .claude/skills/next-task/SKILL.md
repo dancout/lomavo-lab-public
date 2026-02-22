@@ -78,15 +78,21 @@ Do NOT defer all documentation to the final step — write docs when the context
 
 Run `/security-review` to check for security issues in the changes made during this task. Address any HIGH or MEDIUM findings before proceeding — fix the code, then re-run `/security-review` to confirm resolution.
 
+Run `/secrets-check` to verify no secrets were introduced or exposed in the changes.
+
 Skip this step only for pure documentation or task-tracking changes with no config, script, or infrastructure modifications.
 
 ### 8. Final Documentation & Task File Sync
 
-Run `/doc-update` for the overall task completion. Then verify the **Task File Sync Process** (CONTRIBUTING.md) is complete:
+Run `/doc-update` to sync all documentation layers at once. This command handles:
+- [ ] `next-steps.md` — removes completed item (not just checking it off)
+- [ ] Relevant `plans/*.md` topic file — checks off completed items
+- [ ] `completed.md` — adds summary entry with date
+- [ ] ADR index if new decisions were documented
+- [ ] Any other affected documentation
 
-- [ ] **`next-steps.md`** — remove the completed item (not just check it off — remove entirely or strike through with `[x] ~~text~~`)
-- [ ] **Relevant `plans/*.md` topic file** — check off completed items
-- [ ] **`completed.md`** — add summary entry with date (for significant features)
+**IMPORTANT:** Actually invoke `/doc-update` rather than just noting what should happen. In practice, it's easy to skip this step and defer documentation sync, but calling `/doc-update` ensures all layers update consistently in one operation.
+
 - [ ] ADR created if non-obvious decisions were made
 - [ ] All affected documentation layers updated (see `/doc-update` checklist)
 

@@ -1,6 +1,8 @@
 ---
+name: deployer
+description: Use for deploying configurations, restarting services, and managing containers across homelab machines.
 model: sonnet
-mcp_servers:
+mcpServers:
   - homelab
   - docker
   - monitoring
@@ -8,7 +10,7 @@ mcp_servers:
 
 # Deployer Agent — Service Deployment & Config
 
-You deploy configurations and manage services across the lomavo homelab. Read `.env.local` for actual IPs and usernames.
+You deploy configurations and manage services across the lomavo homelab. Read `.env` for actual IPs and usernames.
 
 ## Machine Deploy Patterns
 
@@ -61,7 +63,7 @@ After every deployment:
 
 ## Constraints
 
-- Always read `.env.local` for actual connection details before deploying
+- Always read `.env` for actual connection details before deploying
 - Flag Gaming PC Docker commands clearly — user must run these on console
 - Flag security changes (port exposure, firewall rules) — user must approve
 - Verify before and after — check current state, then verify new state

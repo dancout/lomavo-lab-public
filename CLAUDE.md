@@ -12,7 +12,7 @@ Guidance for Claude Code when working with this repository.
 
 You have SSH access to all machines. Use it proactively.
 
-**Get actual IPs/usernames:** Read `.env.local` (or check `.env.local.example` for structure).
+**Get actual IPs/usernames:** Read `.env` (or check `.env.example` for structure).
 
 | Machine | SSH Command | Common Tasks |
 |---------|-------------|--------------|
@@ -46,7 +46,7 @@ See `reference/design-principles.md` for homelab pillars and technical principle
 
 | Task | Read First | Why |
 |------|-----------|-----|
-| Starting a session | `next-steps.md` | Current priorities |
+| Starting a session | `next-steps.md` + `HOMELAB_PROFILE.md` (if it exists) | Current priorities + hardware context |
 | Planning future work | `plans/README.md` | Phased roadmap index with topic files |
 | Adding/modifying a service | `infrastructure/services.md` | What runs where |
 | **Implementing a plan / adding a service** | **`CONTRIBUTING.md` → New Service Deployment Checklist** | **Don't miss prerequisites, Homepage, Uptime Kuma, alerting** |
@@ -57,6 +57,7 @@ See `reference/design-principles.md` for homelab pillars and technical principle
 | Looking for a file | `reference/file-organization.md` | Repo structure |
 | Finding a credential | `reference/credentials.md` | Where secrets live |
 | Checking service ports | `infrastructure/services.md` | Full port inventory |
+| Understanding this homelab's hardware/goals | `HOMELAB_PROFILE.md` | User's hardware context |
 | Updating instructions/memory | `reference/writing-instructions.md` | Rules for maintaining docs |
 | **Before merging** | **`CONTRIBUTING.md`** | **MANDATORY checklist** |
 
@@ -72,6 +73,7 @@ When you make changes, update docs based on what changed:
 | New environment variable | `.env.example` in relevant directory |
 | Architectural decision | Create `decisions/ADR-XXX-*.md`, update `decisions/README.md` index |
 | Network/IP/mount changes | `infrastructure/network.md` |
+| New/removed service or major feature | `README.md` (architecture diagram, service counts, tech stack, status) |
 
 **When to create an ADR:**
 - Non-obvious technical decisions (workarounds, tradeoffs)
@@ -101,3 +103,4 @@ Plans survive context clearing — invest tokens in context upfront rather than 
 - [ ] Homepage widget added (if service has data to display)
 - [ ] Uptime Kuma entry communicated to user (URL, type, keyword)
 - [ ] Alerting covered (new Prometheus targets get "Scrape Target Down" for free)
+- [ ] `README.md` updated if services, tech stack, or architecture changed

@@ -1,6 +1,6 @@
 # Raspberry Pi Configuration
 
-Host: `<RPI_USER>@<RPI_IP>` (see `.env.local` for actual values)
+Host: `<RPI_USER>@<RPI_IP>` (see `.env` for actual values)
 
 ## Services
 

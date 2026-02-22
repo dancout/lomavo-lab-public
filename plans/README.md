@@ -1,6 +1,6 @@
 # Future Plans
 
-Phased roadmap for lomavo homelab. See `next-steps.md` for immediate tasks, `completed.md` for history.
+Phased roadmap for lomavo homelab. **`next-steps.md` is the prioritized execution queue** — use it to pick work via `/next-task`. Topic files below contain detailed context for when tasks are picked up. See `completed.md` for history.
 
 ## Phase Overview
 

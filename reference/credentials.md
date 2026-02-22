@@ -1,6 +1,6 @@
 # Finding Credentials
 
-**First:** Read `.env.local` for IPs and usernames. Then check machines for secrets:
+**First:** Read `.env` for IPs and usernames. Then check machines for secrets:
 
 | Credential | Location | Command |
 |------------|----------|---------|

@@ -17,9 +17,17 @@ Repository structure for the lomavo homelab documentation.
 │       └── branch/SKILL.md     # Feature branch lifecycle
 ├── CLAUDE.md              # Claude Code instructions (start here)
 ├── CONTRIBUTING.md        # Feature completion checklist
-├── .env.local.example     # Template for local IPs/usernames (copy to .env.local)
+├── GETTING_STARTED.md     # Onboarding guide for new users / forkers
+├── HOMELAB_PROFILE.md.example  # Template for hardware/experience/goals
+├── .env.example           # Template for local IPs/usernames (copy to .env)
 ├── next-steps.md          # Current sprint / active tasks
 ├── completed.md           # Archive of completed work
+│
+├── archive/               # Original owner's state (populated by setup script)
+│   └── README.md          # Explains archived files
+│
+├── scripts/               # Utility scripts
+│   └── new-user-setup.sh  # One-time setup for new users / forkers
 │
 ├── plans/                 # Long-term phased roadmap (split for token efficiency)
 │   ├── README.md          # Slim index — phase overview + links to topic files

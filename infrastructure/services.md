@@ -2,10 +2,10 @@
 
 Read this file when working with specific services, adding new services, or troubleshooting.
 
-**Note:** IPs use placeholders. See `.env.local` for actual values.
+**Note:** IPs use placeholders. See `.env` for actual values.
 
 **Git remote**: `git@github.com:<GITHUB_USER>/lomavo-lab.git`
-**Local config**: Copy `.env.local.example` to `.env.local` and fill in your IPs/usernames.
+**Local config**: Copy `.env.example` to `.env` and fill in your IPs/usernames.
 
 ## Raspberry Pi (`<RPI_IP>`)
 
@@ -45,7 +45,6 @@ Repo location: `rpi/docker/<service>/`
 | mcp-immich | 8772 | Yes | MCP server: photo search, albums, job control (ADR-027) |
 | mcp-dns | 8773 | Yes | MCP server: Pi-hole stats, blocking, query log (ADR-027) |
 | mcp-docker | 8774 | Yes | MCP server: container management across all machines (ADR-027) |
-| MCPO | 8766 | Stopped | Not needed — Open WebUI has native MCP support (cleanup in 3E) |
 | Paperless-ngx | 8776 | Yes | Document management, OCR, tagging (ADR-033) |
 | paperless-postgres | - | Yes | PostgreSQL for Paperless metadata |
 | paperless-redis | - | Yes | Redis for Paperless task queue |

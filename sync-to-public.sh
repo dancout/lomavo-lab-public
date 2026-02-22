@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Sync git-tracked files from private lomavo-lab to public lomavo-lab-public.
-# Only copies files that git tracks (automatically excludes .env.local, .mcp.json, etc.)
+# Only copies files that git tracks (automatically excludes .env, .mcp.json, etc.)
 # Validates no sensitive values leak, commits in public repo, but does NOT push.
 
 PRIVATE_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -16,8 +16,8 @@ if [[ ! -d "$PUBLIC_DIR/.git" ]]; then
     exit 1
 fi
 
-if [[ ! -f "$PRIVATE_DIR/.env.local" ]]; then
-    echo "ERROR: .env.local not found — cannot run leak validation"
+if [[ ! -f "$PRIVATE_DIR/.env" ]]; then
+    echo "ERROR: .env not found — cannot run leak validation"
     exit 1
 fi
 
@@ -96,7 +96,7 @@ while IFS='=' read -r key value; do
         pi-hole|pihole) continue ;;
     esac
     # Grep public repo for this value
-    # Use word-boundary regex for IPs (avoids 10.0.0.1 matching inside 10.0.0.100)
+    # Use word-boundary regex for IPs (avoids short IPs matching inside longer ones)
     # Use fixed-string for everything else
     if [[ "$value" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         escaped=$(printf '%s' "$value" | sed 's/\./\\./g')
@@ -111,7 +111,7 @@ while IFS='=' read -r key value; do
         echo "$matches" | sed 's/^/      /'
         LEAK_FOUND=1
     fi
-done < "$PRIVATE_DIR/.env.local"
+done < "$PRIVATE_DIR/.env"
 
 if [[ $LEAK_FOUND -eq 1 ]]; then
     echo ""

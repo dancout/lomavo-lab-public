@@ -2,7 +2,7 @@
 
 Read this file when doing network-related tasks (IP changes, SSH access, mounts, etc.)
 
-**Note:** All IPs and usernames below use placeholders. See `.env.local` for actual values.
+**Note:** All IPs and usernames below use placeholders. See `.env` for actual values.
 
 ## Device IPs
 

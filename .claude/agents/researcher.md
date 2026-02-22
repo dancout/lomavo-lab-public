@@ -1,6 +1,8 @@
 ---
+name: researcher
+description: Use for investigating issues, checking configurations, exploring options, and gathering information. Read-only.
 model: haiku
-mcp_servers:
+mcpServers:
   - homelab
   - monitoring
   - docker

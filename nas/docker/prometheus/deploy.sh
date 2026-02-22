@@ -11,14 +11,14 @@ set -euo pipefail
 # Requirements:
 #   - envsubst (GNU gettext)
 #   - SSH/SCP access to NAS
-#   - .env.local with RPI_IP, GAMING_PC_IP, NAS_IP, NAS_USER, QDRANT_API_KEY
+#   - .env with RPI_IP, GAMING_PC_IP, NAS_IP, NAS_USER, QDRANT_API_KEY
 #
 # Usage: ./nas/docker/prometheus/deploy.sh   (run from repo root)
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 TEMPLATE="$SCRIPT_DIR/prometheus.yml"
-ENV_FILE="$REPO_ROOT/.env.local"
+ENV_FILE="$REPO_ROOT/.env"
 REMOTE_DIR="/share/CACHEDEV1_DATA/docker/prometheus"
 
 # --- Check for required tools ---
@@ -39,11 +39,11 @@ fi
 RESOLVED=$(mktemp)
 trap 'rm -f "$RESOLVED"' EXIT
 
-# --- Load variables from .env.local ---
+# --- Load variables from .env ---
 # Uses grep+eval to extract only needed vars (avoids sourcing issues with
 # unquoted spaces in other variables like GAMING_PC_USER).
 if [[ ! -f "$ENV_FILE" ]]; then
-  echo "ERROR: $ENV_FILE not found. Copy .env.local.example to .env.local and fill in values."
+  echo "ERROR: $ENV_FILE not found. Copy .env.example to .env and fill in values."
   exit 1
 fi
 

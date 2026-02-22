@@ -4,10 +4,11 @@ MCP server improvements, document search, and related cleanup.
 
 ## MCPO Cleanup
 
-- [ ] Remove MCPO files from Gaming PC (repo clone `gaming-pc\docker\mcpo\` directory)
-- [ ] Remove MCPO from repo (`gaming-pc/docker/mcpo/`)
-- [ ] Remove MCPO entry from Homepage config
+- [x] ~~Remove MCPO files from Gaming PC (repo clone `gaming-pc\docker\mcpo\` directory)~~ — user action below
+- [x] ~~Remove MCPO from repo (`gaming-pc/docker/mcpo/`)~~
+- [x] ~~Remove MCPO entry from Homepage config~~ — replaced with MCP Activity widget
 - [ ] **USER ACTION:** Add Uptime Kuma entries for MCP servers (see next-steps.md for URLs)
+- [ ] **USER ACTION:** Delete `C:\Server_Data\Docker\mcpo\` on Gaming PC
 
 ## Gaming PC Docker
 

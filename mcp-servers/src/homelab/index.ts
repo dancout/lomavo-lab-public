@@ -13,7 +13,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { glob } from 'glob';
+import { glob, globSync } from 'glob';
 import { z } from 'zod';
 import { loadConfig } from '../shared/config.js';
 import { startServer } from '../shared/server-factory.js';
@@ -27,10 +27,21 @@ function safeReadFile(filePath: string): string {
   if (!resolved.startsWith(REPO_ROOT)) {
     return 'Error: path traversal not allowed';
   }
-  if (!existsSync(resolved)) {
-    return `Error: file not found: ${filePath}`;
+  if (existsSync(resolved)) {
+    return readFileSync(resolved, 'utf-8');
   }
-  return readFileSync(resolved, 'utf-8');
+  // Fuzzy match: try prefix glob (e.g. "decisions/ADR-027" → "decisions/ADR-027-*.md")
+  const fuzzyMatches = globSync(`${filePath}*`, {
+    cwd: REPO_ROOT,
+    nodir: true,
+  }).filter(m => join(REPO_ROOT, m).startsWith(REPO_ROOT));
+  if (fuzzyMatches.length === 1) {
+    return readFileSync(join(REPO_ROOT, fuzzyMatches[0]), 'utf-8');
+  }
+  if (fuzzyMatches.length > 1) {
+    return `Multiple matches for "${filePath}":\n${fuzzyMatches.join('\n')}`;
+  }
+  return `Error: file not found: ${filePath}`;
 }
 
 function registerTools(server: McpServer): void {

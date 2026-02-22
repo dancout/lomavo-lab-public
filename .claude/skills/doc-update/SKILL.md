@@ -38,9 +38,9 @@ ${{ cat next-steps.md }}
 ${{ cat plans/README.md }}
 ```
 
-- **next-steps.md** — remove completed items from Active/Backlog
-- **Relevant `plans/*.md` topic file** — check off completed items in the relevant topic
-- **completed.md** — add summary of completed work (significant features only)
+- **next-steps.md** — **REMOVE** completed items completely (don't cross them out)
+- **Relevant `plans/*.md` topic file** — check off completed items in the relevant topic (keep them, just mark done)
+- **completed.md** — **MOVE** completed items here with summary (add to current month section)
 
 ### 3. Check ADR Need
 
@@ -73,8 +73,8 @@ Verify every applicable layer was updated. Skip layers that aren't affected — 
 - [ ] `runbooks/RB-XXX-*.md` + `runbooks/README.md`
 
 **Task tracking (handled in Step 2, confirm here):**
-- [ ] `next-steps.md` — completed items removed
-- [ ] `plans/*.md` — completed items checked off
-- [ ] `completed.md` — summary added
+- [ ] `next-steps.md` — completed items removed (not crossed out, actually deleted)
+- [ ] `plans/*.md` — completed items checked off (kept, marked done)
+- [ ] `completed.md` — completed items moved here with summary (removed from next-steps)
 
 Report what was updated, what was already correct, and what was skipped (not applicable).

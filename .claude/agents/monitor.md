@@ -1,6 +1,8 @@
 ---
+name: monitor
+description: Use for health checks, diagnostics, and reporting current system status across all homelab machines. Read-only.
 model: haiku
-mcp_servers:
+mcpServers:
   - monitoring
   - docker
   - dns
